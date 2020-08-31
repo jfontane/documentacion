@@ -43,24 +43,13 @@ class Persona
    */
   private $email;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   * @Assert\NotBlank
-   */
-  private $password;
 
   /**
-   * One Category has Many Categories.
-   * @ORM\OneToMany(targetEntity="Persona", mappedBy="parent")
-   */
+     * One product has many features. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="Representado", mappedBy="persona")
+     */
   private $representados;
 
-  /**
-   * Many Categories have One Category.
-   * @ORM\ManyToOne(targetEntity="Persona", inversedBy="representados")
-   * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
-   */
-  private $parent;
 
   /**
    * Many Personas have Many Documentos.
@@ -70,7 +59,7 @@ class Persona
 
 
   public function __construct() {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->representados = new \Doctrine\Common\Collections\ArrayCollection();
         $this->documentos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
