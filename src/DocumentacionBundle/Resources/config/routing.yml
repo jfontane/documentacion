@@ -1,0 +1,3 @@
+documentacion_homepage:
+    path:     /
+    defaults: { _controller: DocumentacionBundle:Default:index }
