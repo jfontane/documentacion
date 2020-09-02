@@ -1,13 +1,213 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
-</html>
+<html lang="es">
+<head>
+  <title>Notificaciones - Caja Jubilaciones</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" href="https://www.santafe.gob.ar/assets/standard/images/favicon.ico">
+  <!-- css custom bootstrap theme -->
+  <link rel="stylesheet" href="{{ asset('bundles/documentacion/css/custom.css') }}" type="text/css">
+  <!-- assets fonts -->
+  <link rel="stylesheet" href="https://www.santafe.gob.ar/assets/standard/css/fonts.css" type="text/css">
+  <style>
+
+  /* fallback */
+  @font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url({{ asset('bundles/documentacion/assets/material-design-icons/MaterialIcons-Regular.eot') }}); /* For IE6-8 */
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url({{ asset('bundles/documentacion/assets/material-design-icons/MaterialIcons-Regular.woff2') }}) format('woff2'),
+    url({{ asset('bundles/documentacion/assets/material-design-iconsMaterialIcons-Regular.woff') }}) format('woff'),
+    url({{ asset('bundles/documentacion/assetsMaterialIcons-Regular.ttf') }}) format('truetype');
+  }
+
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -moz-font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+  }
+  </style>
+</head>
+
+<body id="{% block pageid '' %}">
+  <nav class="navbar navbar-expand-md navbar-light fixed-top">
+    <a class="navbar-brand" href="#"><img src="https://www.santafe.gob.ar/assets/standard/images/gob-santafe.png"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+  {% block header %}
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+
+    <ul class="list-inline custom-icon-middle">
+        <li class="list-inline-item dropdown">
+          <a href="#" class="dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false" title="Notificaciones"><i class="material-icons">info</i></a>
+          <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#">Notificacion 1</a>
+            <a class="dropdown-item" href="#">Notificacion 2</a>
+            <a class="dropdown-item" href="#">Otras notificaciones</a>
+          </div>
+        </li>
+
+        <li class="list-inline-item">
+          <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
+          <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
+            <a class="dropdown-item" href="#">Perfil</a>
+            <a class="dropdown-item" href="#">Configuración</a>
+            <a class="dropdown-item" href="#">Acerca de</a>
+          </div>
+        </li>
+        <li class="list-inline-item"><a href="#" title="Salir"><i class="material-icons">exit_to_app</i></a>
+        </li>
+      </ul>
+      {% endblock %}
+    </div>
+  </nav>
+
+  <main role="main" class="container">
+    <div class="row row-top">
+      <div class="col-lg-12">
+        <br>
+        <h1>Sistema Notificaciones Digitales - Caja de Jubilaciones y Pensiones.</h1>
+        <!-- <div class="cover">
+        </div> -->
+      </div>
+    </div>
+
+    {% block body %}
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card bg-light mb-12">
+          <div class="card-header">Notificacion: </div>
+          <div class="card-body">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur aspernatur exercitationem architecto, pariatur nam ab reprehenderit perferendis facere, sint obcaecati earum minima, autem? Harum ab totam, repudiandae quod, animi delectus.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus asperiores similique amet eaque ipsam, doloribus aspernatur consequuntur doloremque voluptatem error libero non nesciunt ad, sunt suscipit. Vel odit vitae inventore.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt adipisci suscipit placeat, laudantium laborum asperiores eos eveniet? Delectus quisquam tempore deleniti distinctio amet maxime culpa similique, consequuntur labore harum repellat!
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci dolor ducimus eligendi optio accusamus nostrum ut enim omnis. Nam unde tempora labore earum fuga beatae, amet consectetur velit porro ratione!
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat corporis unde rerum consectetur iusto quis, nostrum nobis, ab in libero necessitatibus pariatur omnis velit inventore beatae assumenda ea cumque. Aliquam!
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla neque voluptatibus tempora, beatae animi et, accusantium pariatur iste excepturi porro veritatis quaerat veniam, exercitationem magni sint facilis. Molestiae repellendus, corporis.
+            <br><br>
+            <form class="form-inline mt-2 mt-md-0 custom-margin-right">
+              <input class="form-control mr-sm-2" type="text" placeholder="Ingrese su DNI" aria-label="Search" id='text_dni1'>
+              <button class="btn btn-secondary my-2 my-sm-0" type="submit" id='btn_buscar1'>Buscar</button>
+            </form>
+          </div>
+          <div class="card-footer" id="resultado">
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+
+    <div class="row">
+      <div class="col-12">
+        <p class="float-right">
+          <a href="#"><i class="material-icons">keyboard_arrow_up</i></a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div class="clearfix"><br></div>
+
+  <footer class="footer text-muted">
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="offset-md-2 col-md-3">
+          <div class="sociales">
+            <p><a href="/index.php/web/content/view/full/117678">RSS / SUSCRIPCIÓN A NOTICIAS</a></p>
+            <ul class="list-inline footer-ul">
+              <li class="list-inline-item"><a target="_blank" href="http://www.twitter.com/GobSantaFe"><i
+                class="icon-footertwitter"></i></a></li>
+                <li class="list-inline-item"><a target="_blank" href="http://www.facebook.com/GobSantaFe"><i
+                  class="icon-footerfacebook"></i></a>
+                </li>
+                <li class="list-inline-item"><a target="_blank" href="http://gplus.to/GobSantaFe"><i
+                  class="icon-footerg"></i></a></li>
+                  <li class="list-inline-item"><a target="_blank" href="http://gobsantafe.tumblr.com/"><i
+                    class="icon-footertumblr"></i></a>
+                  </li>
+                  <li class="list-inline-item"><a target="_blank" href="http://www.youtube.com/GobSantaFe"><i
+                    class="icon-footeryoutube"></i></a></li>
+                    <li class="list-inline-item"><a target="_blank" href="http://instagram.com/gobsantafe"><i
+                      class="icon-footerinstagram"></i></a></li>
+                      <li class="list-inline-item"><a target="_blank" href="https://es.foursquare.com/gobsantafe"><i
+                        class="icon-footerfoursquare"></i></a></li>
+                        <li class="list-inline-item"><a target="_blank" href="https://storify.com/GobSantaFe"><i
+                          class="icon-footerstorify"></i></a>
+                        </li>
+                        <li class="list-inline-item"><a target="_blank"
+                          href="http://www.linkedin.com/company/gobierno-de-la-provincia-de-santa-fe"><i
+                          class="icon-footerlinkedin"></i></a></li>
+                        </ul>
+                      </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                      <div class="marca">
+                        <img src="https://www.santafe.gob.ar/assets/app/portal/imgs/marca-footer.png" alt="Santa Fe">
+                        <p>Atención telefónica: 0800-777-0801 </p>
+                        <p>Lunes a viernes de 8 a 18 hs </p>
+                        <p><span class="cc">c</span> Atribución-CompartirIgual 2.5 Argentina</p>
+                      </div>
+
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                      <div class="stg-logos-contenedor">
+                        <div class="stg-logos">
+                          <a href="https://www.santafe.gob.ar/tecnologias" target="_blank"><span
+                            class="stg-logos-logo-tec-stg"></span></a>
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+                </footer>
+
+                {% block javascripts %}
+                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                <script src="{{ asset('bundles/documentacion/assets/jquery/jquery-3.2.1.slim/jquery-3.2.1.min.js') }}"></script>
+                <script src="{{ asset('bundles/documentacion/assets/popper.js/1.12.3/umd/popper.min.js') }}" ></script>
+                <script src="{{ asset('bundles/documentacion/assets/bootstrap/bootstrap-4.0.0-beta.2/js/bootstrap.min.js') }}"></script>
+
+                {% endblock %}
+              </body>
+              </html>

@@ -2,6 +2,18 @@ documentacion_homepage:
     path:     /
     defaults: { _controller: DocumentacionBundle:Default:index }
 
-personas_listar_representadas:
+persona_listar_representadas:
     path:     /listar_representadas/{id}
     defaults: { _controller: DocumentacionBundle:Persona:index }
+
+persona_listar_documentos_por_email:
+    path:     /listar_documentos/{email}
+    defaults: { _controller: DocumentacionBundle:Persona:listarDocumentosPorEmail }
+
+documento_listar_documentos:
+    path:     /list
+    defaults: { _controller: DocumentacionBundle:Documento:listarDocumentos }
+
+documento_descargar:
+    path:     /descargar/{id}
+    defaults: { _controller: DocumentacionBundle:Documento:getArchivo }

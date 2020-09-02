@@ -23,7 +23,14 @@ class Documento
    * @ORM\Column(type="string", length=255)
    * @Assert\NotBlank
    */
-  private $nombre;
+  private $archivo;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $descripcion;
+
 
   /**
    * @ORM\Column(type="string", length=255)
@@ -41,12 +48,6 @@ class Documento
    * @ORM\Column(type="string", length=255)
    * @Assert\NotBlank
    */
-  private $descripcion;
-
-  /**
-   * @ORM\Column(type="string", length=255)
-   * @Assert\NotBlank
-   */
   private $cuil;
 
   /**
@@ -59,5 +60,6 @@ class Documento
   public function __construct() {
           $this->personas = new \Doctrine\Common\Collections\ArrayCollection();
   }
+
 
 }
