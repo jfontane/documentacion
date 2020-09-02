@@ -23,7 +23,14 @@ class Documento
    * @ORM\Column(type="string", length=255)
    * @Assert\NotBlank
    */
-  private $nombre;
+  private $archivo;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $descripcion;
+
 
   /**
    * @ORM\Column(type="string", length=255)
@@ -36,12 +43,6 @@ class Documento
    * @Assert\NotBlank
    */
   private $periodoMes;
-
-  /**
-   * @ORM\Column(type="string", length=255)
-   * @Assert\NotBlank
-   */
-  private $descripcion;
 
   /**
    * @ORM\Column(type="string", length=255)
@@ -61,167 +62,4 @@ class Documento
   }
 
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set nombre
-     *
-     * @param string $nombre
-     *
-     * @return Documento
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-
-        return $this;
-    }
-
-    /**
-     * Get nombre
-     *
-     * @return string
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
-
-    /**
-     * Set periodoAnio
-     *
-     * @param string $periodoAnio
-     *
-     * @return Documento
-     */
-    public function setPeriodoAnio($periodoAnio)
-    {
-        $this->periodoAnio = $periodoAnio;
-
-        return $this;
-    }
-
-    /**
-     * Get periodoAnio
-     *
-     * @return string
-     */
-    public function getPeriodoAnio()
-    {
-        return $this->periodoAnio;
-    }
-
-    /**
-     * Set periodoMes
-     *
-     * @param string $periodoMes
-     *
-     * @return Documento
-     */
-    public function setPeriodoMes($periodoMes)
-    {
-        $this->periodoMes = $periodoMes;
-
-        return $this;
-    }
-
-    /**
-     * Get periodoMes
-     *
-     * @return string
-     */
-    public function getPeriodoMes()
-    {
-        return $this->periodoMes;
-    }
-
-    /**
-     * Set descripcion
-     *
-     * @param string $descripcion
-     *
-     * @return Documento
-     */
-    public function setDescripcion($descripcion)
-    {
-        $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    /**
-     * Get descripcion
-     *
-     * @return string
-     */
-    public function getDescripcion()
-    {
-        return $this->descripcion;
-    }
-
-    /**
-     * Set cuil
-     *
-     * @param string $cuil
-     *
-     * @return Documento
-     */
-    public function setCuil($cuil)
-    {
-        $this->cuil = $cuil;
-
-        return $this;
-    }
-
-    /**
-     * Get cuil
-     *
-     * @return string
-     */
-    public function getCuil()
-    {
-        return $this->cuil;
-    }
-
-    /**
-     * Add persona
-     *
-     * @param \DocumentacionBundle\Entity\Persona $persona
-     *
-     * @return Documento
-     */
-    public function addPersona(\DocumentacionBundle\Entity\Persona $persona)
-    {
-        $this->personas[] = $persona;
-
-        return $this;
-    }
-
-    /**
-     * Remove persona
-     *
-     * @param \DocumentacionBundle\Entity\Persona $persona
-     */
-    public function removePersona(\DocumentacionBundle\Entity\Persona $persona)
-    {
-        $this->personas->removeElement($persona);
-    }
-
-    /**
-     * Get personas
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPersonas()
-    {
-        return $this->personas;
-    }
 }
