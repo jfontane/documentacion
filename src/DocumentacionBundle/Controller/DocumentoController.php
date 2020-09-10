@@ -30,6 +30,7 @@ class DocumentoController extends Controller
 
             return $this->file($arch, $fileName);
 
+
             /* $file = stream_get_contents($declaracion->getJubidat(), -1, 0);
               //dump(strlen($file));die;
               $size = strlen($file);
