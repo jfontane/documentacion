@@ -6,12 +6,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class PersonaController extends Controller
 {
-    public function indexAction()
+    public function documentosAction($id)
     {
 
       $em = $this->getDoctrine()->getManager();
-      $representados = $em->getRepository('DocumentacionBundle:Persona')->findBy(array('cuil'=>'20249128342'));
-      dump(count($representados));die;
-      return $this->render('@Documentacion\Default\index.html.twig');
+      $persona = $em->getRepository('DocumentacionBundle:Persona')->findOneById($id);
+      $documentos = $persona->getDocumentos();
+      //dump();die;
+      return $this->render('@Documentacion\Persona\documentos.html.twig', array(
+                           'documentos' => $documentos,
+                           'persona' => $persona
+                          )
+                         );
     }
 }

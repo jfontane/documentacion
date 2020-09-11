@@ -2,6 +2,6 @@ documentacion_homepage:
     path:     /
     defaults: { _controller: DocumentacionBundle:Default:index }
 
-personas_listar_representadas:
-    path:     /listar_representadas/{id}
-    defaults: { _controller: DocumentacionBundle:Persona:index }
+personas_listar_documentos:
+    path:     /documentos/{id}
+    defaults: { _controller: DocumentacionBundle:Persona:documentos }
