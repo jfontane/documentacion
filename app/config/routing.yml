@@ -2,6 +2,10 @@ documentacion:
     resource: "@DocumentacionBundle/Resources/config/routing.yml"
     prefix:   /
 
+documentacion_admin:
+    resource: "@DocumentacionBundle/Resources/config/routing-admin.yml"
+    prefix:   /admin
+
 app:
     resource: '@AppBundle/Controller/'
     type: annotation

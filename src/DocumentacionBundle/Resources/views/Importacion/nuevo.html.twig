@@ -1,0 +1,46 @@
+{% extends "@JubilacionesDeclaraciones/layout.html.twig" %}
+{% block title %}Importacion de Datos{% endblock %}
+{% block pageid 'admin' %}
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('principal_logueado') }}">Home</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="{{ path('admin_importacion_listar') }}">Archivos para Importacion</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+    </ol>
+</nav>
+
+<!-- AGREGAR CÓDIGO FALTANTE -->
+{{ form_errors(form) }}
+{{ form_start(form) }}
+
+
+<table class="table">
+  <tr>
+    <td>  {{ form_label(form.nombre) }} </td><td>{{ form_widget(form.nombre) }}</td>
+  </tr>
+
+  <tr colspan="2">
+    <td>  {{ form_errors(form.nombre) }} </td>
+  </tr>
+
+  <tr>
+    <td>  {{ form_label(form.archivo) }} </td><td>  {{ form_widget(form.archivo) }}</td>
+  </tr>
+
+  <tr colspan="2">
+    <td>  {{ form_errors(form.archivo) }} </td>
+  </tr>
+
+  <tr>
+    <td>    {{ form_label(form.descripcion) }} </td><td>    {{ form_widget(form.descripcion) }}</td>
+  </tr>
+
+  <tr colspan="2">
+    <td>  {{ form_errors(form.descripcion) }} </td>
+  </tr>
+
+</table>
+{{ form_end(form) }}
+
+{% endblock %}
