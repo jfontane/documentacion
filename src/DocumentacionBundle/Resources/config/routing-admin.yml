@@ -1,0 +1,15 @@
+admin_importacion_listar:
+    path: /importacion/listar
+    defaults: { _controller: DocumentacionBundle:Importacion:listar }
+
+admin_importacion_nuevo:
+    path: /importacion/nuevo
+    defaults: { _controller: DocumentacionBundle:Importacion:nuevo }
+
+admin_importacion_subir:
+    path: /importacion/subir/{id}
+    defaults: { _controller: DocumentacionBundle:Importacion:importar }
+
+admin_importacion_borrar:
+    path: /importacion/borrar/{id}
+    defaults: { _controller: DocumentacionBundle:Importacion:borrar }

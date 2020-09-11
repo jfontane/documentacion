@@ -1,0 +1,21 @@
+<h1>Documentos</h1>
+{{ persona.email }}
+<table>
+  <thead>
+    <tr>
+      <th>Nombre Archivo</th>
+      <th>Descripcion</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for documento in documentos %}
+      <tr>
+        <td>{{ documento.archivo }}</td>
+        <td>{{ documento.descripcion }}</td>
+        <td><a href="#">Descargar</a></td>
+      </tr>
+    {% endfor %}
+
+  </tbody>
+</table>

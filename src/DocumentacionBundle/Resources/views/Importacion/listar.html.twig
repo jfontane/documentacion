@@ -1,0 +1,90 @@
+{% set activo = "importacion" %}
+
+{% extends "@Documentacion/layout.html.twig" %}
+{% block title %}Listado de Usuarios{% endblock %}
+{% block pageid 'admin' %}
+
+{% block header %}
+    {% include 'navbar.html.twig' %}
+{% endblock %}
+
+{% block body %}
+        {# CONTENIDO ORIGINAL DEL ARCHIVO Y SIN LAS ETIQUETAS <html><body> � </body></html> #}
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Archivos para Importacion</li>
+            </ol>
+        </nav>
+        <!-- MENSAJES FLASH ADMIN AQUÍ (utilizar <div class=”flash_admin”> </div>) -->
+        <div class="alert alert-info" role="alert" >
+            {% for mensaje in app.session.flashbag.get('warn') %}
+                <p class="warn">{{ mensaje }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="grid_16">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Descripcion</th>
+                        <th>Procesado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for archivo in archivos %}
+                        <tr>
+                            <td>
+                                {{ archivo.id }}
+                            </td>
+                            <td>
+                                {{ archivo.nombre }}
+                            </td>
+                            <td>
+                              {{ archivo.fechaCreacion is empty ? "" : archivo.fechaCreacion | date('Y-m-d H:i') }}
+                            </td>
+                            <td>
+                                {{ archivo.descripcion }}
+                            </td>
+                            <td>
+                                {{ archivo.procesado }}
+                            </td>
+                            <td>
+                                <a href="{#{ path('admin_importacion_subir',{'id': archivo.id }) }#}">Importar</a>&nbsp;&nbsp;
+                                <a href="" id="btn_borrar" data-id="{{ archivo.id }}">Borrar</a>&nbsp;&nbsp;
+
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">No existe ningun Archivo a Importar</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{#{path('admin_importacion_nuevo')}#}"> Nuevo </a>
+            <br>
+        </div>
+
+    {% endblock %}
+    {% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('a[id=btn_borrar]').on('click', function () {
+                event.preventDefault();
+                id = $(this).data("id");
+                //var url = "../admin/declaracion/listar";
+                var url = "./borrar/" + id;
+                if (confirm('Esta seguro de Eliminar la Importacion??')) {
+                    $(location).attr('href', url);
+                }
+            });
+        });
+    </script>
+    {% endblock %}

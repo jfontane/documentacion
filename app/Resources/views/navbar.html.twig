@@ -1,35 +1,130 @@
 <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
+
+{#Roles :#} {#{ dump(app.user.getRoles()) }#}
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#"><i class="material-icons">home</i> <span class="sr-only">(current)</span></a>
+          </li>
         <li class="nav-item">
-            <a class="nav-link" href="">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="">Organismos <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="">Representantes</a>
-        </li>
-        <li class="nav-item active">
-            <a class="nav-link" href="">Declaraciones</a>
+        <a class="nav-link" href="{#{ path('admin_organismo_listar') }#}">Organismos <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="">Importacion</a>
+        <a class="nav-link" href="{#{ path('admin_usuario_listar') }#}">Usuarios</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="">Usuarios</a>
+        <a class="nav-link" href="{#{ path('admin_importacion_listar') }#}">Importacion</a>
         </li>
-    </ul>
-    <ul class="list-inline custom-icon-middle">
+
+        </ul>
+        <ul class="list-inline custom-icon-middle">
         <li class="list-inline-item">
-            <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
-            <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
-                <a class="dropdown-item" href="">Cambiar Contraseña</a>
-            </div>
+        <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
+        <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
+        <a class="dropdown-item" href="{#{ path('organismo_usuario_editar') }#}">Cambiar Contraseña</a>
+        </div>
 
         </li>
-        <li class="list-inline-item"><a href="" title="Salir"><i class="material-icons">exit_to_app</i></a>
+        <li class="list-inline-item"><a href="{#{ path('logout') }#}" title="Salir"><i class="material-icons">exit_to_app</i></a>
         </li>
-    </ul>
+        </ul>
+
+{% elseif is_granted('ROLE_ADMIN') %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#"><i class="material-icons">home</i> <span class="sr-only">(current)</span></a>
+          </li>
+          {% if activo=='organismos'  %}
+          <li class="nav-item active">
+          {% else  %}
+          <li class="nav-item">
+          {% endif  %}
+        <a class="nav-link" href="{#{ path('contralor_organismo_listar') }#}">Organismos<span class="sr-only">(current)</span></a>
+        </li>
+        {% if activo=='representantes'  %}
+        <li class="nav-item active">
+        {% else  %}
+        <li class="nav-item">
+        {% endif  %}
+        <a class="nav-link" href="{#{ path('contralor_representante_listar') }#}">Representantes</a>
+        </li>
+        {% if activo=='declaraciones'  %}
+        <li class="nav-item active">
+        {% else  %}
+        <li class="nav-item">
+        {% endif  %}
+        <a class="nav-link" href="{#{ path('contralor_declaracion_opciones') }#}">Declaraciones</a>
+        </li>
+        {% if activo=='importacion'  %}
+        <li class="nav-item active">
+        {% else  %}
+        <li class="nav-item">
+        {% endif  %}
+           <a class="nav-link" href="{#{ path('admin_importacion_listar') }#}">Importacion</a>
+        </li>
+        <li class="nav-item">
+           <a class="nav-link" href="{#{ path('contralor_usuario_listar') }#}">Usuarios</a>
+        </li>
+        </ul>
+        <ul class="list-inline custom-icon-middle">
+        <li class="list-inline-item">
+        <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
+        <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
+        <a class="dropdown-item" href="{#{ path('organismo_usuario_editar') }#}">Cambiar Contraseña</a>
+        </div>
+
+        </li>
+        <li class="list-inline-item"><a href="{#{ path('logout') }#}" title="Salir"><i class="material-icons">exit_to_app</i></a>
+        </li>
+        </ul>
+
+{% else %}
+
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#"><i class="material-icons">home</i><span class="sr-only">(current)</span></a>
+            </li>
+            {% if activo=='organismo'  %}
+            <li class="nav-item active">
+            {% else  %}
+            <li class="nav-item">
+            {% endif  %}
+          <a class="nav-link" href="{#{ path('organismo_organismo_listar') }#}">Organismo <span class="sr-only">(current)</span></a>
+          </li>
+          {% if activo=='convenios'  %}
+          <li class="nav-item active">
+          {% else  %}
+          <li class="nav-item">
+          {% endif  %}
+          <a class="nav-link" href="{#{ path('organismo_convenio_cuota_listar') }#}">Convenios</a>
+          </li>
+          {% if activo=='declaraciones'  %}
+          <li class="nav-item active">
+          {% else  %}
+          <li class="nav-item">
+          {% endif  %}
+          <a class="nav-link" href="{#{ path('organismo_declaracion_listar') }#} ">Declaraciones</a>
+          </li>
+          </ul>
+          <ul class="list-inline custom-icon-middle">
+          <li class="list-inline-item">
+          <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
+          <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
+          <a class="dropdown-item" href="{#{ path('organismo_usuario_editar') }#}">Cambiar Contraseña</a>
+          </div>
+
+          </li>
+          <li class="list-inline-item"><a href="{#{ path('logout') }#}" title="Salir"><i class="material-icons">exit_to_app</i></a>
+          </li>
+          </ul>
+
+{% endif %}
+
 </div>
