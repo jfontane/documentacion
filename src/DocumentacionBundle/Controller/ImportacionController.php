@@ -22,18 +22,9 @@ class ImportacionController extends Controller {
     public function listarAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $importaciones = $em->getRepository('DocumentacionBundle:Importacion')->findAll();
-        //dump($usuarios);die;
-      /*  $paginator = $this->get('knp_paginator');
+        $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
+        $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-                       $usuarios,
-                       $request->query->getInt('page', 1),
-                       10
-               );*/
-
-
-               $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
-               $paginator = $this->get('knp_paginator');
-               $pagination = $paginator->paginate(
                        $importaciones,
                        $request->query->getInt('page', 1),
                        2
