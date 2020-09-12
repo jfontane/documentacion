@@ -18,7 +18,9 @@
                 <p class="warn">{{ mensaje }}</p>
             {% endfor %}
         </div>
-
+        <div class="mt-4">
+            Se encontraron {{ pagination.getTotalItemCount() }} declaracion(es).
+        </div>
         <div class="grid_16">
             <table class="table">
                 <thead class="thead-dark">
@@ -32,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for archivo in archivos %}
+                    {% for archivo in pagination %}
                         <tr>
                             <td>
                                 {{ archivo.id }}
@@ -64,6 +66,9 @@
             </table>
             <a href="{{path('admin_importacion_nuevo')}}" class="btn btn-success"> Nuevo </a>
             <br>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
         </div>
 
     {% endblock %}

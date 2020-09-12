@@ -19,12 +19,27 @@ use DocumentacionBundle\Entity\User;
 
 class ImportacionController extends Controller {
 
-    public function listarAction() {
+    public function listarAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $archivos = $em->getRepository('DocumentacionBundle:Importacion')->findAll();
+        $importaciones = $em->getRepository('DocumentacionBundle:Importacion')->findAll();
         //dump($usuarios);die;
+      /*  $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+                       $usuarios,
+                       $request->query->getInt('page', 1),
+                       10
+               );*/
+
+
+               $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
+               $paginator = $this->get('knp_paginator');
+               $pagination = $paginator->paginate(
+                       $importaciones,
+                       $request->query->getInt('page', 1),
+                       2
+               );
         return $this->render('@Documentacion/Importacion/listar.html.twig', array(
-                    'archivos' => $archivos
+                    'pagination' => $pagination,
         ));
     }
 
@@ -32,21 +47,13 @@ class ImportacionController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $importacion = $em->getRepository('DocumentacionBundle:Importacion')->findOneBy(array('id' => $id));
         $fileName = $id.'_'.$importacion->getNombre() . '.txt';
-        // Para borrar el archivo
         $fs = new Filesystem();
-        if ($importacion->getNombre()=='Impagos') {
-           //$fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/impa3.txt');
-        } else {
-           //$fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/'.$fileName);
-        }
-
-
+        $fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/'.$fileName);
         $em->remove($importacion);
         $em->flush();
-        AbstractBaseController::addWarnMessage('La Importacion de ' .
+        AbstractBaseController::addWarnMessage('El registro de La Importacion de ' .
                 $importacion->getNombre() .
                 ' se ha borrado correctamente.');
-
         return $this->redirect($this->generateUrl('admin_importacion_listar'));
     }
 
@@ -80,13 +87,12 @@ class ImportacionController extends Controller {
             $fileImportacion->move("uploads", $file_name);
             // maybe set a "flash" success message for the user
             // Mensaje para notificar al usuario que todo ha salido bien
-            AbstractBaseController::addWarnMessage('El Archivo de importacion "' . $importacion->getNombre() . '"  sido Creado.');
+            AbstractBaseController::addWarnMessage('La importacion del archivo "' . $importacion->getNombre() . '"  ha sido Exitosa.');
             return $this->redirectToRoute('admin_importacion_listar');
         }
         return $this->render('@Documentacion/Importacion/nuevo.html.twig', array('form' => $form->createView()
         ));
     }
-
 
     public function importarAction($id) {
         $em = $this->getDoctrine()->getManager();
@@ -96,26 +102,22 @@ class ImportacionController extends Controller {
         $fileName = $id.'_'.$importacion->getNombre() . '.txt';
         if ($esta_procesado == 'No') {
             if ($tipo_importacion == 'Beneficios') {
-              //  $this->importarUsuarios($fileName);
-              //  $this->vincularUsuariosOrganismos($fileName);
                 $this->procesarArchivo($fileName);
                 $importacion->setProcesado('Si');
                 $em->persist($importacion);
                 $em->flush();
-                AbstractBaseController::addInfoMessage('La importacion de Beneficios se ha realizado con Exito.');
+                AbstractBaseController::addWarnMessage('La importacion de Beneficios se ha PROCESADO con Exito.');
             }
         } else
-            AbstractBaseController::addInfoMessage('No se ha realizado ninguna importacion con Exito.');
-
+            AbstractBaseController::addWarnMessage('No se ha realizado ninguna importacion con Exito.');
         return $this->redirectToRoute('admin_importacion_listar');
     }
 
     private function procesarArchivo($fileName) {
         $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $lineas = count($archivo);
-        //  dump($archivo[0]);die;
-        //  $linea=explode(';',$archivo[0]);
         $em = $this->getDoctrine()->getManager();
+        $c = 0;
         for ($i = 0; $i < $lineas; $i++) {
             $documento = new Documento();
             $persona = new Persona();
@@ -125,53 +127,52 @@ class ImportacionController extends Controller {
             $email = explode(';', $archivo[$i])[3];
             $email_arreglado = str_replace (array("\r\n", "\n", "\r"), '', $email);
             $documento->setCuil($cuil);
-            $documento->setArchivo($nombre_archivo);
-            $documento->setDescripcion($descripcion);
+            $documento->setArchivo(utf8_encode($nombre_archivo));
+            $documento->setDescripcion(utf8_encode($descripcion));
             $documento->setPeriodoAnio('2020');
             $documento->setPeriodoMes('08');
-            $persona->setEmail($email_arreglado);
-            $persona->setPassword('12345');
-            $persona->setFechaExpiracion(new \DateTime('now'));
-            if ($this->personaEsta($email_arreglado)==NULL) {
-               $em->persist($persona);
-            }
+            //BUSCO SI YA EXISTE EL EMAIL
+            $perso = $em->getRepository('DocumentacionBundle:Persona')->findOneBy(array('email' => $email_arreglado));
+            //SI NO EXISTE PERSISTO LA PERSONA Y LA VINCULO AL DOCUMENTO
+            if (NULL == $perso) {
+              $persona->setEmail($email_arreglado);
+              $persona->setPassword('12345');
+              $persona->setFechaExpiracion(new \DateTime('now'));
+              $em->persist($persona);
+              $documento->addPersona($persona);
+
+            } else { // SI YA EXISTE LA PERSONA LA VINCULO AL DOCUMENTO
+              $documento->addPersona($perso);
+
+            };
             $em->persist($documento);
             $em->flush();
-            /*
-            if ($this->documentoEsta($nombre_archivo)==NULL){
-              $documento->addPersona($persona);
-              $em->persist($persona);
-              $em->persist($documento);
-              $em->flush();
-            } else {
-              $documento->addPersona($persona);
-              $em->persist($persona);
-              $em->persist($documento);
-              $em->flush();
+        }; // END FOR
+    }
+
+    private function controlEmails($fileName) {
+        $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
+        $lineas = count($archivo);
+        //  dump($archivo[0]);die;
+        //  $linea=explode(';',$archivo[0]);
+        $em = $this->getDoctrine()->getManager();
+        $c = 0;
+
+        for ($i = 0; $i < $lineas; $i++) {
+            $persona = new Persona;
+            $email = explode(';', $archivo[$i])[3];
+            $email_arreglado = str_replace (array("\r\n", "\n", "\r"), '', $email);
+            //dump($email_arreglado);
+            if (($i%2)==1) {
+               $persona = $em->getRepository('DocumentacionBundle:Persona')->findOneBy(array('email' => $email_arreglado));
             }
-            */
 
-
-
-
-            //dump($cuil.'-'.$nombre_archivo.'-'.$tipo.'-'.$email_arreglado);
-            //$persona = $this->personaEsta($email_arreglado);
-            //$documentos = $this->documentoEsta($cuil);
-            //dump($cuil,$documentos);
-
-
-          /*  $organismo->setCodigo($org_codigo);
-            $organismo->setNombre($org_nombre);
-            $organismo->setDomicilioCalle($org_domicilio_calle);
-            $organismo->setDomicilioNumero($org_domicilio_numero);
-
-            //dump('Password: '.$password);die;
-            // 4) save the User!
-            $em->persist($organismo);
-            $em->flush();
-            //die;*/
+            if ($persona->getEmail() != NULL) {
+              dump($email_arreglado);$c++;
+            };
         };
-        die;
+        dump($c);
+        die();
     }
 
     private function personaEsta($email) {
@@ -185,6 +186,5 @@ class ImportacionController extends Controller {
       $documento = $em->getRepository('DocumentacionBundle:Documento')->findOneBy(array('archivo' => $archivo));
       return $documento;
     }
-
 
 }
