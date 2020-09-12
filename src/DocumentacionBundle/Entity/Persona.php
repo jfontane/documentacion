@@ -32,7 +32,7 @@ class Persona
   private $password;
 
   /**
-   * @ORM\Column(type="string", length=255)
+   * @ORM\Column(type="datetime", nullable=true)
    * @Assert\NotBlank
    */
   private $fechaExpiracion;

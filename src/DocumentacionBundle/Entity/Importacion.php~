@@ -1,0 +1,47 @@
+<?php
+
+namespace DocumentacionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Organismo
+ *
+ * @ORM\Table(name="importacion")
+ * @ORM\Entity(repositoryClass="DocumentacionBundle\Repository\ImportacionRepository")
+ */
+class Importacion {
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('Usuarios','Beneficios')")
+     * @Assert\NotBlank
+     */
+    private $nombre;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     */
+    private $descripcion;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\Date()
+     */
+    private $fechaCreacion;
+
+    /**
+     * @ORM\Column(type="string", columnDefinition="enum('Si', 'No')")
+     * @Assert\Choice({"Si","No"})
+     */
+    protected $procesado;
+
+}

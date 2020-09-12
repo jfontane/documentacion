@@ -1,12 +1,7 @@
 {% set activo = "importacion" %}
-
 {% extends "@Documentacion/layout.html.twig" %}
 {% block title %}Listado de Usuarios{% endblock %}
 {% block pageid 'admin' %}
-
-{% block header %}
-    {% include 'navbar.html.twig' %}
-{% endblock %}
 
 {% block body %}
         {# CONTENIDO ORIGINAL DEL ARCHIVO Y SIN LAS ETIQUETAS <html><body> � </body></html> #}
@@ -55,8 +50,8 @@
                                 {{ archivo.procesado }}
                             </td>
                             <td>
-                                <a href="{#{ path('admin_importacion_subir',{'id': archivo.id }) }#}">Importar</a>&nbsp;&nbsp;
-                                <a href="" id="btn_borrar" data-id="{{ archivo.id }}">Borrar</a>&nbsp;&nbsp;
+                                <a href="{{ path('admin_importacion_procesar',{'id': archivo.id }) }}">Procesar</a>&nbsp;&nbsp;
+                                <a href="#" id="btn_borrar" data-id="{{ archivo.id }}">Borrar</a>&nbsp;&nbsp;
 
                             </td>
                         </tr>
@@ -67,7 +62,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{#{path('admin_importacion_nuevo')}#}"> Nuevo </a>
+            <a href="{{path('admin_importacion_nuevo')}}" class="btn btn-success"> Nuevo </a>
             <br>
         </div>
 

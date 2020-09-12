@@ -1,10 +1,11 @@
-{% extends "@JubilacionesDeclaraciones/layout.html.twig" %}
+{% set activo = "importacion" %}
+{% extends "@Documentacion/layout.html.twig" %}
 {% block title %}Importacion de Datos{% endblock %}
 {% block pageid 'admin' %}
 {% block body %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ path('principal_logueado') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{#{ path('principal_logueado') }#}">Home</a></li>
         <li class="breadcrumb-item" aria-current="page"><a href="{{ path('admin_importacion_listar') }}">Archivos para Importacion</a></li>
         <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
     </ol>

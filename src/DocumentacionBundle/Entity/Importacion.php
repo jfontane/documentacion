@@ -21,7 +21,7 @@ class Importacion {
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, columnDefinition="enum('Usuarios','Organismos', 'Representantes', 'Declaraciones_Organismo', 'ConvenioCuotas_Organismo', 'ConvenioCtaCte_Organismo','Impagos')")
+     * @ORM\Column(type="string", length=255, columnDefinition="enum('Beneficios')")
      * @Assert\NotBlank
      */
     private $nombre;
@@ -43,6 +43,7 @@ class Importacion {
      * @Assert\Choice({"Si","No"})
      */
     protected $procesado;
+
 
     /**
      * Get id
@@ -79,30 +80,6 @@ class Importacion {
     }
 
     /**
-     * Set fechaCreacion
-     *
-     * @param \DateTime $fechaCreacion
-     *
-     * @return Importacion
-     */
-    public function setFechaCreacion($fechaCreacion)
-    {
-        $this->fechaCreacion = $fechaCreacion;
-
-        return $this;
-    }
-
-    /**
-     * Get fechaCreacion
-     *
-     * @return \DateTime
-     */
-    public function getFechaCreacion()
-    {
-        return $this->fechaCreacion;
-    }
-
-    /**
      * Set descripcion
      *
      * @param string $descripcion
@@ -124,6 +101,30 @@ class Importacion {
     public function getDescripcion()
     {
         return $this->descripcion;
+    }
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return Importacion
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaCreacion
+     *
+     * @return \DateTime
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
     }
 
     /**

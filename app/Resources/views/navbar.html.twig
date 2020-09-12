@@ -94,21 +94,21 @@
             {% else  %}
             <li class="nav-item">
             {% endif  %}
-          <a class="nav-link" href="{#{ path('organismo_organismo_listar') }#}">Organismo <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{#{ path('organismo_organismo_listar') }#}">Archivos<span class="sr-only">(current)</span></a>
           </li>
           {% if activo=='convenios'  %}
           <li class="nav-item active">
           {% else  %}
           <li class="nav-item">
           {% endif  %}
-          <a class="nav-link" href="{#{ path('organismo_convenio_cuota_listar') }#}">Convenios</a>
+          <a class="nav-link" href="{#{ path('organismo_convenio_cuota_listar') }#}">Interesados</a>
           </li>
           {% if activo=='declaraciones'  %}
           <li class="nav-item active">
           {% else  %}
           <li class="nav-item">
           {% endif  %}
-          <a class="nav-link" href="{#{ path('organismo_declaracion_listar') }#} ">Declaraciones</a>
+          <a class="nav-link" href="{#{ path('organismo_declaracion_listar') }#} ">Visitas</a>
           </li>
           </ul>
           <ul class="list-inline custom-icon-middle">
