@@ -3,5 +3,5 @@ documentacion_homepage:
     defaults: { _controller: DocumentacionBundle:Default:index }
 
 personas_listar_documentos:
-    path:     /documentos/{id}
+    path:     /documentos/{id
     defaults: { _controller: DocumentacionBundle:Persona:documentos }

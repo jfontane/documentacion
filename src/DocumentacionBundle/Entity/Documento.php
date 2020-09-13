@@ -51,6 +51,12 @@ class Documento
   private $cuil;
 
   /**
+   * @ORM\Column(type="integer")
+   * @Assert\NotBlank
+   */
+  private $cantidadVisitas;
+
+  /**
    * Many Documentos have Many Personas.
    * @ORM\ManyToMany(targetEntity="Persona", inversedBy="documentos")
    * @ORM\JoinTable(name="documentos_personas")
@@ -225,5 +231,29 @@ class Documento
     public function getPersonas()
     {
         return $this->personas;
+    }
+
+    /**
+     * Set cantidadVisitas
+     *
+     * @param integer $cantidadVisitas
+     *
+     * @return Documento
+     */
+    public function setCantidadVisitas($cantidadVisitas)
+    {
+        $this->cantidadVisitas = $cantidadVisitas;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadVisitas
+     *
+     * @return integer
+     */
+    public function getCantidadVisitas()
+    {
+        return $this->cantidadVisitas;
     }
 }
