@@ -22,9 +22,9 @@
             Se encontraron {{ pagination.getTotalItemCount() }} Usuario(es).
         </div>
         <div class="grid_16">
-                {% for persona in pagination %}
+                {% for usuario in pagination %}
                           <div class="alert alert-primary" role="alert">
-                            <b>{{ persona.email }}</b>
+                            <b>{{ usuario.username }}::{{ usuario.roles[0] }}</b>
                                 <table class="table">
                                   <thead class="thead-dark">
                                     <tr>
@@ -36,7 +36,7 @@
                                     </tr>
                                   </thead>
                                   <tbody>
-                                  {% for documento in persona.documentos %}
+                                  {% for documento in usuario.documentos %}
                                   <tr>
                                     <td>{{documento.cuil}}</td>
                                     <td>{{documento.periodoAnio}}/{{documento.periodoMes}}</td>
@@ -54,9 +54,9 @@
                               </div>
 
                     {% else %}
-                      No existe ninguna Persona.
+                      No existe ninguna Usuario.
                     {% endfor %}
-            <a href="{{path('admin_importacion_nuevo')}}" class="btn btn-success"> Nuevo </a>
+            <a href="{#{path('admin_importacion_nuevo')}#}" class="btn btn-success"> Nuevo </a>
             <br>
             <div class="navigation">
                 {{ knp_pagination_render(pagination) }}

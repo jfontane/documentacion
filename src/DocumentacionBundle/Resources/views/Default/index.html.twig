@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-     HELLO WORLD!!
-  </body>
-</html>
+{% set activo = 'index' %}
+{% extends "@Documentacion/layout.html.twig" %}
+    {% block pageid 'index' %}
+        {% block body %}
+<p align='justify'>Este servicio permite a los organismos provinciales aportantes a la Caja de Jubilaciones y Pensiones de la Provincia de Santa Fe, presentar mensualmente las declaraciones juradas de los aportes de sus empleados y las cargas de familia, sin necesidad de concurrir a la Caja de Jubilaciones y Pensiones de la Provincia.
+</p>
+<p align='justify'>En el caso que haya modificaciones en la declaración jurada que ya fue presentada, se deberá subir la declaración jurada correctiva que va a reemplazar la anteriormente presentada.
+</p>
+<p align='justify'>La carga de familia de los activos aportantes a la Caja de Jubilaciones y Pensiones de la Provincia es una obligación que el empleador deberá realizar como mínimo una vez al año.
+</p>
+<p align='justify'>La carga deberá realizarse durante el primer semestre de cada año con datos al 31 de diciembre del año inmediato anterior.
+</p>
+<p align='justify'>Destinatario/s:</p>
+  <p align='justify'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Organismos provinciales adheridos al régimen previsional de la Caja de Jubilaciones y Pensiones.</p>
+  <p align='justify'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Para habilitar este servicio el organismo debe registrarse desde la aplicación. En el proceso de registración la aplicación generará el Formulario FR-200. El mismo debe entregarse por duplicado y única vez en la Caja de Jubilaciones y Pensiones o en cualquiera de sus Delegaciones.</p>
+<br>
+{% endblock %}

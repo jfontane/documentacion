@@ -94,14 +94,14 @@
             {% else  %}
             <li class="nav-item">
             {% endif  %}
-          <a class="nav-link" href="{{ path('admin_importacion_listar') }}">Archivos<span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{{ path('admin_importacion_listar') }}">Importacion<span class="sr-only">(current)</span></a>
           </li>
           {% if activo=='convenios'  %}
           <li class="nav-item active">
           {% else  %}
           <li class="nav-item">
           {% endif  %}
-          <a class="nav-link" href="{{ path('admin_usuarios_listar_documentos') }}">Interesados</a>
+          <a class="nav-link" href="{{ path('admin_usuarios_listar') }}">Usuarios</a>
           </li>
           {% if activo=='declaraciones'  %}
           <li class="nav-item active">

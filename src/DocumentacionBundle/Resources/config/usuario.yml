@@ -1,0 +1,3 @@
+admin_usuarios_listar:
+    path:     /listar
+    defaults: { _controller: DocumentacionBundle:Usuario:listar }

@@ -1,19 +1,15 @@
 admin_importacion_listar:
-    path: /importacion/listar
+    path: /listar
     defaults: { _controller: DocumentacionBundle:Importacion:listar }
 
 admin_importacion_nuevo:
-    path: /importacion/nuevo
+    path: /nuevo
     defaults: { _controller: DocumentacionBundle:Importacion:nuevo }
 
 admin_importacion_procesar:
-    path: /importacion/procesar/{id}
+    path: /procesar/{id}
     defaults: { _controller: DocumentacionBundle:Importacion:importar }
 
 admin_importacion_borrar:
-    path: /importacion/borrar/{id}
+    path: /borrar/{id}
     defaults: { _controller: DocumentacionBundle:Importacion:borrar }
-
-admin_usuarios_listar_documentos:
-    path:     /persona/listar
-    defaults: { _controller: DocumentacionBundle:Persona:listar }

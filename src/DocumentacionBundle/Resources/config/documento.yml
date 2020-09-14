@@ -1,0 +1,3 @@
+documento_descargar:
+    path:     /descargar/{id}
+    defaults: { _controller: DocumentacionBundle:Documento:descargar }

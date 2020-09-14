@@ -1,11 +1,30 @@
 # To get started with security, check out the documentation:
 # https://symfony.com/doc/current/security.html
 security:
-
+    encoders:
+        DocumentacionBundle\Entity\Usuario:
+            algorithm: bcrypt
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+        ROLE_ADMIN: [ROLE_USER]
+
     providers:
+        todos:
+            chain:
+                providers: [usuarios_db, in_memory]
+        usuarios_db:
+            entity:
+                class: DocumentacionBundle:Usuario
+                property: email
+                # if you're using multiple entity managers
+                # manager_name: customer
         in_memory:
-            memory: ~
+            memory:
+                users:
+                    jfontanellaz:
+                        password: $2y$13$rbRVmZlqbce02et8zJ2YvOOahqzXlDxPrwnp/paYxB8Bs64Sz2Q36
+                        roles: 'ROLE_SUPER_ADMIN'
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -14,11 +33,25 @@ security:
             security: false
 
         main:
+            pattern: ^/
             anonymous: ~
-            # activate different ways to authenticate
-            logout_on_user_change: true
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
+            provider: usuarios_db
+            form_login:
+                login_path: login
+                check_path: login
+                default_target_path: principal_logueado
+            remember_me:
+                secret:   '%secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+                # por defecto, esta funcionalidad está disponible en una
+                # checkbox en el formulario de login, descomenta la
+                # siguiente línea para activarlo siempre.
+                #always_remember_me: true
+            logout:
+                path: /logout
+                target: /
 
-            # https://symfony.com/doc/current/security/form_login_setup.html
-            #form_login: ~
+    access_control:
+
+        - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }

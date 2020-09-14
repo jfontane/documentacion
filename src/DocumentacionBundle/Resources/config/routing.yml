@@ -4,12 +4,14 @@ documentacion_homepage:
 
 login:
     path: /login
-    defaults: { _controller: DocumentacionBundle:Login:login }    
+    defaults: { _controller: DocumentacionBundle:Login:login }
 
-personas_listar_documentos:
-    path:     /documentos/{id
-    defaults: { _controller: DocumentacionBundle:Persona:documentos }
+login_check:
+    path: /login_check
 
-documento_descargar:
-    path:     /documentos/descargar/{id}
-    defaults: { _controller: DocumentacionBundle:Documento:descargar }
+logout:
+    path: /logout
+
+principal_logueado:
+    path: /principal
+    defaults: { _controller: JubilacionesDeclaracionesBundle:Default:principal }

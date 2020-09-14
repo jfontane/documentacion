@@ -56,17 +56,18 @@ class Documento
   private $cantidadVisitas = 0;
 
   /**
-   * Many Documentos have Many Personas.
-   * @ORM\ManyToMany(targetEntity="Persona", inversedBy="documentos")
-   * @ORM\JoinTable(name="documentos_personas")
+   * Many Documentos have Many Usuarios.
+   * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="documentos")
+   * @ORM\JoinTable(name="documentos_usuarios")
    */
-  private $personas;
-
-  public function __construct() {
-          $this->personas = new \Doctrine\Common\Collections\ArrayCollection();
-  }
-
-
+  private $usuarios;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->usuarios = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -199,40 +200,6 @@ class Documento
     }
 
     /**
-     * Add persona
-     *
-     * @param \DocumentacionBundle\Entity\Persona $persona
-     *
-     * @return Documento
-     */
-    public function addPersona(\DocumentacionBundle\Entity\Persona $persona)
-    {
-        $this->personas[] = $persona;
-
-        return $this;
-    }
-
-    /**
-     * Remove persona
-     *
-     * @param \DocumentacionBundle\Entity\Persona $persona
-     */
-    public function removePersona(\DocumentacionBundle\Entity\Persona $persona)
-    {
-        $this->personas->removeElement($persona);
-    }
-
-    /**
-     * Get personas
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPersonas()
-    {
-        return $this->personas;
-    }
-
-    /**
      * Set cantidadVisitas
      *
      * @param integer $cantidadVisitas
@@ -254,5 +221,39 @@ class Documento
     public function getCantidadVisitas()
     {
         return $this->cantidadVisitas;
+    }
+
+    /**
+     * Add usuario
+     *
+     * @param \DocumentacionBundle\Entity\Usuario $usuario
+     *
+     * @return Documento
+     */
+    public function addUsuario(\DocumentacionBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios[] = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Remove usuario
+     *
+     * @param \DocumentacionBundle\Entity\Usuario $usuario
+     */
+    public function removeUsuario(\DocumentacionBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios->removeElement($usuario);
+    }
+
+    /**
+     * Get usuarios
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsuarios()
+    {
+        return $this->usuarios;
     }
 }

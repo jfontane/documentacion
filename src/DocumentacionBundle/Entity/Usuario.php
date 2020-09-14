@@ -1,6 +1,6 @@
 <?php
 
-namespace Jubilaciones\DeclaracionesBundle\Entity;
+namespace DocumentacionBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User implements UserInterface {
+class Usuario implements UserInterface {
 
     /**
      * @ORM\Id
@@ -46,15 +46,18 @@ class User implements UserInterface {
     private $roles;
 
     /**
-     * @ORM\Column(type="string", columnDefinition="enum('Norte', 'Sur','Sin Datos','Todas')", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\NotBlank
      */
-    protected $zona;
+    private $fechaExpiracion;
 
     /**
-     * @ORM\OneToOne(targetEntity="Organismo", inversedBy="usuario")
-     * @ORM\JoinColumn(name="organismo_id", referencedColumnName="id")
+     * Many Personas have Many Documentos.
+     * @ORM\ManyToMany(targetEntity="Documento", mappedBy="usuarios")
      */
-    protected $organismo;
+    private $documentos;
+
+
 
     public function __construct() {
     }
@@ -117,52 +120,60 @@ class User implements UserInterface {
 
 
     /**
-     * Set organismo
+     * Set fechaExpiracion
      *
-     * @param \Jubilaciones\DeclaracionesBundle\Entity\Organismo $organismo
+     * @param \DateTime $fechaExpiracion
      *
-     * @return User
+     * @return Usuario
      */
-    public function setOrganismo(\Jubilaciones\DeclaracionesBundle\Entity\Organismo $organismo = null)
+    public function setFechaExpiracion($fechaExpiracion)
     {
-        $this->organismo = $organismo;
+        $this->fechaExpiracion = $fechaExpiracion;
 
         return $this;
     }
 
     /**
-     * Get organismo
+     * Get fechaExpiracion
      *
-     * @return \Jubilaciones\DeclaracionesBundle\Entity\Organismo
+     * @return \DateTime
      */
-    public function getOrganismo()
+    public function getFechaExpiracion()
     {
-        return $this->organismo;
+        return $this->fechaExpiracion;
     }
 
-
-
     /**
-     * Set zona
+     * Add documento
      *
-     * @param string $zona
+     * @param \DocumentacionBundle\Entity\Documento $documento
      *
-     * @return User
+     * @return Usuario
      */
-    public function setZona($zona)
+    public function addDocumento(\DocumentacionBundle\Entity\Documento $documento)
     {
-        $this->zona = $zona;
+        $this->documentos[] = $documento;
 
         return $this;
     }
 
     /**
-     * Get zona
+     * Remove documento
      *
-     * @return string
+     * @param \DocumentacionBundle\Entity\Documento $documento
      */
-    public function getZona()
+    public function removeDocumento(\DocumentacionBundle\Entity\Documento $documento)
     {
-        return $this->zona;
+        $this->documentos->removeElement($documento);
+    }
+
+    /**
+     * Get documentos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocumentos()
+    {
+        return $this->documentos;
     }
 }

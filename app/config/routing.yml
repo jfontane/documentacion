@@ -2,9 +2,17 @@ documentacion:
     resource: "@DocumentacionBundle/Resources/config/routing.yml"
     prefix:   /
 
-documentacion_admin:
-    resource: "@DocumentacionBundle/Resources/config/routing-admin.yml"
-    prefix:   /admin
+documentacion_usuario:
+    resource: "@DocumentacionBundle/Resources/config/usuario.yml"
+    prefix:   /usuario
+
+documentacion_importacion:
+    resource: "@DocumentacionBundle/Resources/config/importacion.yml"
+    prefix:   /importacion
+
+documentacion_documento:
+    resource: "@DocumentacionBundle/Resources/config/documento.yml"
+    prefix:   /documento    
 
 app:
     resource: '@AppBundle/Controller/'

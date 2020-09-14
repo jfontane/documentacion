@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormError;
 use DocumentacionBundle\Controller\AbstractBaseController;
 use DocumentacionBundle\Form\ImportacionType;
 use DocumentacionBundle\Entity\Importacion;
-use DocumentacionBundle\Entity\Persona;
+use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Entity\Documento;
 use DocumentacionBundle\Entity\User;
 
@@ -108,10 +108,11 @@ class ImportacionController extends Controller {
         $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $lineas = count($archivo);
         $em = $this->getDoctrine()->getManager();
+        $passwordEncoder = $this->get('security.password_encoder');
         $c = 0;
         for ($i = 0; $i < $lineas; $i++) {
             $documento = new Documento();
-            $persona = new Persona();
+            $usuario = new Usuario();
             $cuil = explode(';', $archivo[$i])[0];
             $nombre_archivo = explode(';', $archivo[$i])[1];
             $descripcion = explode(';', $archivo[$i])[2];
@@ -123,17 +124,20 @@ class ImportacionController extends Controller {
             $documento->setPeriodoAnio('2020');
             $documento->setPeriodoMes('08');
             //BUSCO SI YA EXISTE EL EMAIL
-            $perso = $em->getRepository('DocumentacionBundle:Persona')->findOneBy(array('email' => $email_arreglado));
-            //SI NO EXISTE PERSISTO LA PERSONA Y LA VINCULO AL DOCUMENTO
+            $perso = $em->getRepository('DocumentacionBundle:Usuario')->findOneBy(array('username' => $email_arreglado));
+            //SI NO EXISTE PERSISTO EL USUARIO Y LA VINCULO AL DOCUMENTO
             if (NULL == $perso) {
-              $persona->setEmail($email_arreglado);
-              $persona->setPassword('12345');
-              $persona->setFechaExpiracion(new \DateTime('now'));
-              $em->persist($persona);
-              $documento->addPersona($persona);
+              $usuario->setUsername($email_arreglado);
+              $usuario->setPlainPassword('12345');
+              $password = $passwordEncoder->encodePassword($usuario, $usuario->getPlainPassword());
+              $usuario->setPassword($password);
+              $usuario->setRoles('ROLE_USER');
+              $usuario->setFechaExpiracion(new \DateTime('now'));
+              $em->persist($usuario);
+              $documento->addUsuario($usuario);
 
-            } else { // SI YA EXISTE LA PERSONA LA VINCULO AL DOCUMENTO
-              $documento->addPersona($perso);
+            } else { // SI YA EXISTE EL USUARIO LA VINCULO AL DOCUMENTO
+              $documento->addUsuario($perso);
 
             };
             $em->persist($documento);
@@ -141,41 +145,5 @@ class ImportacionController extends Controller {
         }; // END FOR
     }
 
-    private function controlEmails($fileName) {
-        $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
-        $lineas = count($archivo);
-        //  dump($archivo[0]);die;
-        //  $linea=explode(';',$archivo[0]);
-        $em = $this->getDoctrine()->getManager();
-        $c = 0;
-
-        for ($i = 0; $i < $lineas; $i++) {
-            $persona = new Persona;
-            $email = explode(';', $archivo[$i])[3];
-            $email_arreglado = str_replace (array("\r\n", "\n", "\r"), '', $email);
-            //dump($email_arreglado);
-            if (($i%2)==1) {
-               $persona = $em->getRepository('DocumentacionBundle:Persona')->findOneBy(array('email' => $email_arreglado));
-            }
-
-            if ($persona->getEmail() != NULL) {
-              dump($email_arreglado);$c++;
-            };
-        };
-        dump($c);
-        die();
-    }
-
-    private function personaEsta($email) {
-      $em = $this->getDoctrine()->getManager();
-      $persona = $em->getRepository('DocumentacionBundle:Persona')->findOneBy(array('email' => $email));
-      return $persona;
-    }
-
-    private function documentoEsta($archivo) {
-      $em = $this->getDoctrine()->getManager();
-      $documento = $em->getRepository('DocumentacionBundle:Documento')->findOneBy(array('archivo' => $archivo));
-      return $documento;
-    }
 
 }
