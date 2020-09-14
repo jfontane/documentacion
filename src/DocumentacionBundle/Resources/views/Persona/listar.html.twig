@@ -42,7 +42,7 @@
                                     <td>{{documento.periodoAnio}}/{{documento.periodoMes}}</td>
                                     <td>{{documento.archivo}}</td>
                                     <td>{{documento.descripcion}}</td>
-                                    <td>Ver</td>
+                                    <td><a href="{{ path('documento_descargar',{'id':documento.id}) }}"><i class="material-icons">picture_as_pdf</i></a></td>
                                   </tr>
                                 {% else %}
                                 <tr>

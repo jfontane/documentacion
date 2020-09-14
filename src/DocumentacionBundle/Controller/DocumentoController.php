@@ -3,6 +3,8 @@
 namespace DocumentacionBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -43,7 +45,27 @@ class DocumentoController extends Controller
               return $response; */
         }
 
+        public function descargarAction($id)
+        {
 
+              $em = $this->getDoctrine()->getManager();
+              $documento = $em->getRepository('DocumentacionBundle:Documento')->find($id);
+              $fileName = $documento->getArchivo();
+              $path = $this->get('kernel')->getRootDir(). "/../web/downloads/";
+              $content = file_get_contents($path.$fileName);
+              $response = new Response();
+              //set headers
+              $response->headers->set('Content-Type', 'mime/type');
+              $response->headers->set('Content-Disposition', 'attachment;filename="'.$fileName);
+              $response->setContent($content);
+              if ($response != NULL) {
+                $documento->setCantidadVisitas($documento->getCantidadVisitas()+1);
+                $em->persist($documento);
+                $em->flush();
+
+              };
+              return $response;
+        }
 
 
 }

@@ -118,8 +118,8 @@ class ImportacionController extends Controller {
             $email = explode(';', $archivo[$i])[3];
             $email_arreglado = str_replace (array("\r\n", "\n", "\r"), '', $email);
             $documento->setCuil($cuil);
-            $documento->setArchivo(utf8_encode($nombre_archivo));
-            $documento->setDescripcion(utf8_encode($descripcion));
+            $documento->setArchivo($nombre_archivo);
+            $documento->setDescripcion($descripcion);
             $documento->setPeriodoAnio('2020');
             $documento->setPeriodoMes('08');
             //BUSCO SI YA EXISTE EL EMAIL

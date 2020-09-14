@@ -51,10 +51,9 @@ class Documento
   private $cuil;
 
   /**
-   * @ORM\Column(type="integer")
-   * @Assert\NotBlank
+   * @ORM\Column(type="integer", nullable=true)
    */
-  private $cantidadVisitas;
+  private $cantidadVisitas = 0;
 
   /**
    * Many Documentos have Many Personas.
