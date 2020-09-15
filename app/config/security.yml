@@ -16,7 +16,7 @@ security:
         usuarios_db:
             entity:
                 class: DocumentacionBundle:Usuario
-                property: email
+                property: username
                 # if you're using multiple entity managers
                 # manager_name: customer
         in_memory:
@@ -55,3 +55,4 @@ security:
     access_control:
 
         - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/principal', roles: ['ROLE_USER','ROLE_ADMIN']}

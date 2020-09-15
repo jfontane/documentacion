@@ -29,7 +29,6 @@ class DocumentoController extends Controller
             //    $fs = new Filesystem();
             //    $fs->remove($this->get('kernel')->getRootDir().'/../web/uploads/'.$file_name);
             $arch = new File($this->get('kernel')->getRootDir() . '/../web/upload/' . $fileName);
-
             return $this->file($arch, $fileName);
 
 

@@ -1,93 +1,11 @@
 <div class="collapse navbar-collapse" id="navbarCollapse">
 
 {#Roles :#} {#{ dump(app.user.getRoles()) }#}
-{% if is_granted('ROLE_SUPER_ADMIN') %}
 
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"><i class="material-icons">home</i> <span class="sr-only">(current)</span></a>
-          </li>
-        <li class="nav-item">
-        <a class="nav-link" href="{#{ path('admin_organismo_listar') }#}">Organismos <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="{#{ path('admin_usuario_listar') }#}">Usuarios</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="{#{ path('admin_importacion_listar') }#}">Importacion</a>
-        </li>
-
-        </ul>
-        <ul class="list-inline custom-icon-middle">
-        <li class="list-inline-item">
-        <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
-        <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
-        <a class="dropdown-item" href="{#{ path('organismo_usuario_editar') }#}">Cambiar Contraseña</a>
-        </div>
-
-        </li>
-        <li class="list-inline-item"><a href="{#{ path('logout') }#}" title="Salir"><i class="material-icons">exit_to_app</i></a>
-        </li>
-        </ul>
-
-{% elseif is_granted('ROLE_ADMIN') %}
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"><i class="material-icons">home</i> <span class="sr-only">(current)</span></a>
-          </li>
-          {% if activo=='organismos'  %}
-          <li class="nav-item active">
-          {% else  %}
-          <li class="nav-item">
-          {% endif  %}
-        <a class="nav-link" href="{#{ path('contralor_organismo_listar') }#}">Organismos<span class="sr-only">(current)</span></a>
-        </li>
-        {% if activo=='representantes'  %}
-        <li class="nav-item active">
-        {% else  %}
-        <li class="nav-item">
-        {% endif  %}
-        <a class="nav-link" href="{#{ path('contralor_representante_listar') }#}">Representantes</a>
-        </li>
-        {% if activo=='declaraciones'  %}
-        <li class="nav-item active">
-        {% else  %}
-        <li class="nav-item">
-        {% endif  %}
-        <a class="nav-link" href="{#{ path('contralor_declaracion_opciones') }#}">Declaraciones</a>
-        </li>
-        {% if activo=='importacion'  %}
-        <li class="nav-item active">
-        {% else  %}
-        <li class="nav-item">
-        {% endif  %}
-           <a class="nav-link" href="{#{ path('admin_importacion_listar') }#}">Importacion</a>
-        </li>
-        <li class="nav-item">
-           <a class="nav-link" href="{#{ path('contralor_usuario_listar') }#}">Usuarios</a>
-        </li>
-        </ul>
-        <ul class="list-inline custom-icon-middle">
-        <li class="list-inline-item">
-        <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
-        <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
-        <a class="dropdown-item" href="{#{ path('organismo_usuario_editar') }#}">Cambiar Contraseña</a>
-        </div>
-
-        </li>
-        <li class="list-inline-item"><a href="{#{ path('logout') }#}" title="Salir"><i class="material-icons">exit_to_app</i></a>
-        </li>
-        </ul>
-
-{% else %}
-
+{% if is_granted('ROLE_ADMIN')  %}
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#"><i class="material-icons">home</i><span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{{ path('principal_logueado') }}"><i class="material-icons">home</i><span class="sr-only">(current)</span></a>
             </li>
             {% if activo=='organismo'  %}
             <li class="nav-item active">
@@ -103,13 +21,6 @@
           {% endif  %}
           <a class="nav-link" href="{{ path('admin_usuarios_listar') }}">Usuarios</a>
           </li>
-          {% if activo=='declaraciones'  %}
-          <li class="nav-item active">
-          {% else  %}
-          <li class="nav-item">
-          {% endif  %}
-          <a class="nav-link" href="{#{ path('organismo_declaracion_listar') }#} ">Visitas</a>
-          </li>
           </ul>
           <ul class="list-inline custom-icon-middle">
           <li class="list-inline-item">
@@ -117,14 +28,48 @@
           aria-haspopup="true"
           aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
           <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
-          <a class="dropdown-item" href="{#{ path('organismo_usuario_editar') }#}">Cambiar Contraseña</a>
+          <a class="dropdown-item" href="{{ path('usuario_cambiar_password') }}">Cambiar Contraseña</a>
           </div>
-
           </li>
-          <li class="list-inline-item"><a href="{#{ path('logout') }#}" title="Salir"><i class="material-icons">exit_to_app</i></a>
+          <li class="list-inline-item"><a href="{{ path('logout') }}" title="Salir"><i class="material-icons">exit_to_app</i></a>
           </li>
           </ul>
+{% elseif is_granted('ROLE_USER') %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ path('principal_logueado') }}"><i class="material-icons">home</i> <span class="sr-only">(current)</span></a>
+          </li>
+      {% if activo=='documentos'  %}
+          <li class="nav-item active">
+      {% else  %}
+          <li class="nav-item">
+      {% endif  %}
+        <a class="nav-link" href="{{ path('usuario_documentos_listar') }}">Documentos<span class="sr-only">(current)</span></a>
+        </li>
+        </ul>
+        <ul class="list-inline custom-icon-middle">
+        <li class="list-inline-item">
+        <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false" title="Usuario logeado"><i class="material-icons">person</i></a>
+        <div class="dropdown-menu custom-dropdown-menu-right" aria-labelledby="dropdownMenuLinkPerson">
+        <a class="dropdown-item" href="{{ path('usuario_cambiar_password') }}">Cambiar Contraseña</a>
+        </div>
 
+        </li>
+        <li class="list-inline-item"><a href="{{ path('logout') }}" title="Salir"><i class="material-icons">exit_to_app</i></a>
+        </li>
+        </ul>
+{% else %}
+           <ul class="navbar-nav mr-auto">
+               <li class="nav-item active">
+                 <a class="nav-link" href="{{ path('documentacion_homepage') }}"><i class="material-icons">home</i><span class="sr-only">(current)</span></a>
+               </li>
+               <li class="nav-item active">
+                  <a class="nav-link" href="{{ path('login') }}">Ingresar<span class="sr-only">(current)</span></a>
+               </li>
+           </ul>
 {% endif %}
+
 
 </div>

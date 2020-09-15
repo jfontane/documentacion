@@ -33,3 +33,6 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+    DocumentacionBundle\Services\Notificacion:
+        public: true
+        arguments: ["@doctrine.orm.entity_manager", "@mailer"]

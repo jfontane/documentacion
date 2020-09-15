@@ -44,6 +44,11 @@ class Importacion {
      */
     protected $procesado;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $nombreUsuario;
+
 
     /**
      * Get id
@@ -149,5 +154,29 @@ class Importacion {
     public function getProcesado()
     {
         return $this->procesado;
+    }
+
+    /**
+     * Set nombreUsuario
+     *
+     * @param string $nombreUsuario
+     *
+     * @return Importacion
+     */
+    public function setNombreUsuario($nombreUsuario)
+    {
+        $this->nombreUsuario = $nombreUsuario;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreUsuario
+     *
+     * @return string
+     */
+    public function getNombreUsuario()
+    {
+        return $this->nombreUsuario;
     }
 }

@@ -4,7 +4,11 @@ documentacion_homepage:
 
 login:
     path: /login
-    defaults: { _controller: DocumentacionBundle:Login:login }
+    defaults: { _controller: DocumentacionBundle:Default:login }
+
+generar_password:
+    path: /generar_password
+    defaults: { _controller: DocumentacionBundle:Default:generarPassword }
 
 login_check:
     path: /login_check
@@ -14,4 +18,4 @@ logout:
 
 principal_logueado:
     path: /principal
-    defaults: { _controller: JubilacionesDeclaracionesBundle:Default:principal }
+    defaults: { _controller: DocumentacionBundle:Default:principal }

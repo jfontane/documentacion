@@ -15,7 +15,6 @@ use DocumentacionBundle\Form\ImportacionType;
 use DocumentacionBundle\Entity\Importacion;
 use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Entity\Documento;
-use DocumentacionBundle\Entity\User;
 
 class ImportacionController extends Controller {
 
@@ -49,11 +48,11 @@ class ImportacionController extends Controller {
     }
 
     public function nuevoAction(Request $request) {
-      //  $user = $this->getUser();
+        $user = $this->getUser();
+        $user_name = $user->getUserName();
         $importacion = new Importacion();
         $form = $this->createForm(ImportacionType::class, $importacion, array('bandera'=> true))
                 ->add('Guardar', SubmitType::class);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // 3) Encode the password (you could also do this via Doctrine listener)
@@ -70,6 +69,7 @@ class ImportacionController extends Controller {
             $importacion->setFechaCreacion(new \DateTime('now'));
 
             $importacion->setProcesado('No');
+            $importacion->setNombreUsuario($user_name);
             $em = $this->getDoctrine()->getManager();
             $em->persist($importacion);
             $em->flush();
@@ -135,7 +135,6 @@ class ImportacionController extends Controller {
               $usuario->setFechaExpiracion(new \DateTime('now'));
               $em->persist($usuario);
               $documento->addUsuario($usuario);
-
             } else { // SI YA EXISTE EL USUARIO LA VINCULO AL DOCUMENTO
               $documento->addUsuario($perso);
 

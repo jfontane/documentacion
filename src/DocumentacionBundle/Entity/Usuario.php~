@@ -118,4 +118,62 @@ class Usuario implements UserInterface {
         return $this->getUsername();
     }
 
+
+    /**
+     * Set fechaExpiracion
+     *
+     * @param \DateTime $fechaExpiracion
+     *
+     * @return Usuario
+     */
+    public function setFechaExpiracion($fechaExpiracion)
+    {
+        $this->fechaExpiracion = $fechaExpiracion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaExpiracion
+     *
+     * @return \DateTime
+     */
+    public function getFechaExpiracion()
+    {
+        return $this->fechaExpiracion;
+    }
+
+    /**
+     * Add documento
+     *
+     * @param \DocumentacionBundle\Entity\Documento $documento
+     *
+     * @return Usuario
+     */
+    public function addDocumento(\DocumentacionBundle\Entity\Documento $documento)
+    {
+        $this->documentos[] = $documento;
+
+        return $this;
+    }
+
+    /**
+     * Remove documento
+     *
+     * @param \DocumentacionBundle\Entity\Documento $documento
+     */
+    public function removeDocumento(\DocumentacionBundle\Entity\Documento $documento)
+    {
+        $this->documentos->removeElement($documento);
+    }
+
+    /**
+     * Get documentos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocumentos()
+    {
+        return $this->documentos;
+    }
 }
