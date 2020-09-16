@@ -2,6 +2,13 @@
 {% extends "@Documentacion/layout.html.twig" %}
     {% block pageid 'index' %}
         {% block body %}
+
+<div class="alert alert-warning" role="alert">
+            {% for mensaje in app.session.flashbag.get('warn') %}
+                <p class="warn"><b>{{ mensaje }}</b></p>
+            {% endfor %}
+</div>
+
 <p align='justify'>Este servicio permite a los organismos provinciales aportantes a la Caja de Jubilaciones y Pensiones de la Provincia de Santa Fe, presentar mensualmente las declaraciones juradas de los aportes de sus empleados y las cargas de familia, sin necesidad de concurrir a la Caja de Jubilaciones y Pensiones de la Provincia.
 </p>
 <p align='justify'>En el caso que haya modificaciones en la declaración jurada que ya fue presentada, se deberá subir la declaración jurada correctiva que va a reemplazar la anteriormente presentada.

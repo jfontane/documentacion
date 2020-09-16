@@ -28,8 +28,6 @@
                             is redirected to on success (more details below)
                             <input type="hidden" name="_target_path" value="/account"/>
                         #}
-
-
                         <div class='control-group form-group'>
                             <div class='controls'>
                                 <button class="btn btn-primary" type="submit">login</button>
@@ -37,11 +35,10 @@
                         </div>
                         <div class='control-group form-group'>
                             <div class='controls'>
-                                <a href="#">Generar Contrase&ntilde;a</a>
+                                <a href="{{ path('generar_password') }}">Generar Contrase&ntilde;a</a>
                             </div>
                         </div>
                     </form>
                 </div>
-
             </div>
         {% endblock %}
