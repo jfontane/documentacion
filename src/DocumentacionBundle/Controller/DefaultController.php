@@ -90,5 +90,4 @@ class DefaultController extends Controller {
     return $password;
 }
 
-
 }
