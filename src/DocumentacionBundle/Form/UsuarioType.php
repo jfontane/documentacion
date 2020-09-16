@@ -18,7 +18,18 @@ class UsuarioType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('username', TextType::class)
-                ->add('Guardar',SubmitType::class, array('label' => 'Nuevo Usuario'));
+                ->add('plainPassword', RepeatedType::class, [
+                      'type' => PasswordType::class,
+                            'first_options' => ['label' => 'Password'],
+                            'second_options' => ['label' => 'Repeat Password'],
+                        ])
+                ->add('roles', ChoiceType::class, array(
+                            'mapped' => false,
+                            'choices' => array('ROLE_SUPER_ADMIN' => 'ROLE_SUPER_ADMIN','ROLE_ADMIN' => 'ROLE_ADMIN', 'ROLE_CONTRALOR' => 'ROLE_CONTRALOR',
+                                'ROLE_ORGANISMO' => 'ROLE_ORGANISMO', 'ROLE_USER' => 'ROLE_USER'))
+                        );
+
+                //->add('Guardar',SubmitType::class, array('label' => 'Nuevo Usuario'));
     }
 
     public function configureOptions(OptionsResolver $resolver) {

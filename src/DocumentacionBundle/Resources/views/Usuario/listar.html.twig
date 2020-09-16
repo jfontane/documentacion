@@ -1,4 +1,4 @@
-{% set activo = "importacion" %}
+{% set activo = "usuarios" %}
 {% extends "@Documentacion/layout.html.twig" %}
 {% block title %}Listado de Usuarios{% endblock %}
 {% block pageid 'admin' %}
@@ -24,7 +24,7 @@
         <div class="grid_16">
                 {% for usuario in pagination %}
                           <div class="alert alert-primary" role="alert">
-                            <b>{{ usuario.username }}::{{ usuario.roles[0] }}</b>
+                            <b>{{ usuario.username }}::{{ usuario.roles[0] }} <a href="{{ path('usuario_editar_email',{'id':usuario.id}) }}"><i class="material-icons">edit</i></a></b>
                                 <table class="table">
                                   <thead class="thead-dark">
                                     <tr>

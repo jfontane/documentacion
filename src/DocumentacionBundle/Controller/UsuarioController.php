@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use DocumentacionBundle\Entity\Usuario;
+use DocumentacionBundle\Form\UsuarioType;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 class UsuarioController extends Controller
@@ -94,6 +96,35 @@ class UsuarioController extends Controller
       return $this->render('@Documentacion/Usuario/editar.html.twig'
       , array('form' => $form->createView(), 'usuario' => $user
     ));
+    }
+
+
+    public function editarEmailAction($id, Request $request, UserInterface $user) {
+      $em = $this->getDoctrine()->getManager();
+      $usuario = $em->getRepository('DocumentacionBundle:Usuario')->findOneById($id);
+      //dump($usuario);die;
+      $form = $this->createForm(UsuarioType::class, $usuario);
+      $form->remove('plainPassword');
+      $form->remove('roles');
+      $form->remove('fechaExpiracion');
+      $form->handleRequest($request);
+      if ($form->isSubmitted() && $form->isValid()) {
+        //die('entrooo');
+      /*  //$evento->setDescripcion($this->get('eventos.util')->autoLinkText($evento->getDescripcion()));
+        $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
+*/      //$form->get('dueDate')->getData();
+        //$form->get('roles')->setData($usuario->getRoles());
+        $em->persist($usuario);
+        $em->flush();
+        AbstractBaseController::addWarnMessage('El Email del Usuario "' . $usuario->getUsername(). '", se ha modificado correctamente.');
+        //  $this->get('eventos.notificacion')->sendToAll('Symfony 2020!', 'Se ha actualizado el evento '.$organismo->getNombre().'.');
+        return $this->redirect($this->generateUrl('admin_usuarios_listar'));
+      };
+      return $this->render('@Documentacion/Usuario/editarEmail.html.twig', array(
+                             'form' => $form->createView(),
+                             'usuario' => $usuario));
+      //                       die;
     }
 
 }

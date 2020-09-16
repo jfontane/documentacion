@@ -14,3 +14,7 @@ usuario_documentos_listar:
 usuario_cambiar_password:
     path:     /cambiar_password
     defaults: { _controller: DocumentacionBundle:Usuario:cambiarPassword }
+
+usuario_editar_email:
+    path:     /editarEmail/{id}
+    defaults: { _controller: DocumentacionBundle:Usuario:editarEmail }

@@ -27,7 +27,6 @@ class Usuario implements UserInterface, \Serializable {
     private $username;
 
     /**
-     * @Assert\NotBlank
      * @Assert\Length(max=4096)
      */
     private $plainPassword;

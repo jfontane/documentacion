@@ -62,14 +62,14 @@ class DefaultController extends Controller {
                  //sumo 2 dias
                  $fecha_expiracion = date("d-m-Y H:i:s",strtotime($fecha_actual."+ 2 day"));
                  $password_aleatoria = $this->generar_password_complejo(10);
-                 $password = $passwordEncoder->encodePassword($usuario, '1q2w3e');
+                 $password = $passwordEncoder->encodePassword($usuario, $password_aleatoria);
                  $usuario->setPassword($password);
                  $usuario->setFechaExpiracion(new \DateTime($fecha_expiracion));
                  $em->persist($usuario);
                  $em->flush();
                  // EN ESTA INSTANCIA SE DEBERA MANDAR EL EMAIL CON LA CLAVE.
 
-                 $this->get('Notificacion')->sendTo('Caja Jubilaciones - Sistema Documentacion Digital - Clave Generada', 'Su Clave de acceso es: '.$password_aleatoria. ' .', $usuario->getUsername());
+                 //$this->get('eventos.notificacion')->sendTo('Caja Jubilaciones - Sistema Documentacion Digital - Clave Generada', 'Su Clave de acceso es: '.$password_aleatoria. ' .', $usuario->getUsername());
                  AbstractBaseController::addWarnMessage('La Clave Generada es: '.$password_aleatoria.' ,con un tiempo de Expiracion de 48Hs');
                } else { //SI NO COINCIDE EL EMAIL ENTONCES DAMOS UN MENSAJE POR ABSTRACTBASECONTROLLER
                  AbstractBaseController::addWarnMessage('El email NO se encuentra Registrado.');

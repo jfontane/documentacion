@@ -51,8 +51,7 @@ class ImportacionController extends Controller {
         $user = $this->getUser();
         $user_name = $user->getUserName();
         $importacion = new Importacion();
-        $form = $this->createForm(ImportacionType::class, $importacion, array('bandera'=> true))
-                ->add('Guardar', SubmitType::class);
+        $form = $this->createForm(ImportacionType::class, $importacion, array('bandera'=> true));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // 3) Encode the password (you could also do this via Doctrine listener)
