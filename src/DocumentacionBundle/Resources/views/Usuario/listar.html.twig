@@ -24,7 +24,17 @@
         <div class="grid_16">
                 {% for usuario in pagination %}
                           <div class="alert alert-primary" role="alert">
-                            <b>{{ usuario.username }}::{{ usuario.roles[0] }} <a href="{{ path('usuario_editar_email',{'id':usuario.id}) }}"><i class="material-icons">edit</i></a></b>
+                          <p><b>Usuario:&nbsp;</b>{{ usuario.username }} <b><a href="{{ path('usuario_editar_email',{'id':usuario.id}) }}"><i class="material-icons">edit</i></a></b></p>
+                          <p><b>Roles:&nbsp;</b> {{ usuario.roles[0] }}</p>
+                          <p><b>Fecha que se Registr&oacute;:</b>&nbsp;
+
+                              {% if usuario.fechaRegistracion == NULL %}
+                                     NO se ha Registrado.
+                              {% else %}
+                                     {{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }}
+                              {% endif %}
+
+                            </p>
                                 <table class="table">
                                   <thead class="thead-dark">
                                     <tr>

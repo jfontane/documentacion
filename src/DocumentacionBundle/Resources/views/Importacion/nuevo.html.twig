@@ -26,14 +26,28 @@
                   </div>
 
                   <div class='control-group form-group'>
-                      <label for="username"><b>{{ form_label(form.archivo) }}</b></label>
+                      <label for="archivo"><b>{{ form_label(form.archivo) }}</b></label>
                       <div class='controls'>
                           {{ form_widget(form.archivo) }}
                       </div>
                   </div>
 
                   <div class='control-group form-group'>
-                      <label for="username"><b>{{ form_label(form.descripcion) }}</b></label>
+                      <label for="periodoAnio"><b>{{ form_label(form.periodoAnio) }}</b></label>
+                      <div class='controls'>
+                          {{ form_widget(form.periodoAnio) }}
+                      </div>
+                  </div>
+
+                  <div class='control-group form-group'>
+                      <label for="periodoMes"><b>{{ form_label(form.periodoMes) }}</b></label>
+                      <div class='controls'>
+                          {{ form_widget(form.periodoMes) }}
+                      </div>
+                  </div>
+
+                  <div class='control-group form-group'>
+                      <label for="descripcion"><b>{{ form_label(form.descripcion) }}</b></label>
                       <div class='controls'>
                           {{ form_widget(form.descripcion) }}
                       </div>
@@ -50,6 +64,8 @@
                           {{ form_errors(form) }}
                           {{ form_errors(form.nombre) }}
                           {{ form_errors(form.archivo) }}
+                          {{ form_errors(form.periodoAnio) }}
+                          {{ form_errors(form.periodoMes) }}
                           {{ form_errors(form.descripcion) }}
                       </div>
                   </div>

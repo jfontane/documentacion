@@ -33,6 +33,16 @@ class Importacion {
     private $descripcion;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $periodoAnio;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $periodoMes;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\Date()
      */
@@ -178,5 +188,53 @@ class Importacion {
     public function getNombreUsuario()
     {
         return $this->nombreUsuario;
+    }
+
+    /**
+     * Set periodoAnio
+     *
+     * @param string $periodoAnio
+     *
+     * @return Importacion
+     */
+    public function setPeriodoAnio($periodoAnio)
+    {
+        $this->periodoAnio = $periodoAnio;
+
+        return $this;
+    }
+
+    /**
+     * Get periodoAnio
+     *
+     * @return string
+     */
+    public function getPeriodoAnio()
+    {
+        return $this->periodoAnio;
+    }
+
+    /**
+     * Set periodoMes
+     *
+     * @param string $periodoMes
+     *
+     * @return Importacion
+     */
+    public function setPeriodoMes($periodoMes)
+    {
+        $this->periodoMes = $periodoMes;
+
+        return $this;
+    }
+
+    /**
+     * Get periodoMes
+     *
+     * @return string
+     */
+    public function getPeriodoMes()
+    {
+        return $this->periodoMes;
     }
 }

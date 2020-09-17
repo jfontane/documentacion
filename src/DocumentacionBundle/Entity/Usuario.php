@@ -51,6 +51,11 @@ class Usuario implements UserInterface, \Serializable {
     private $fechaExpiracion;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fechaRegistracion;
+
+    /**
      * Many Personas have Many Documentos.
      * @ORM\ManyToMany(targetEntity="Documento", mappedBy="usuarios")
      */
@@ -199,4 +204,28 @@ class Usuario implements UserInterface, \Serializable {
            // $this->salt
        ) = unserialize($serialized);
    }
+
+    /**
+     * Set fechaRegistracion
+     *
+     * @param \DateTime $fechaRegistracion
+     *
+     * @return Usuario
+     */
+    public function setFechaRegistracion($fechaRegistracion)
+    {
+        $this->fechaRegistracion = $fechaRegistracion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistracion
+     *
+     * @return \DateTime
+     */
+    public function getFechaRegistracion()
+    {
+        return $this->fechaRegistracion;
+    }
 }

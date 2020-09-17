@@ -25,7 +25,17 @@
                          Se encontraron {{ cantidad }} Documento(s).
                      </div><br>
                           <div class="alert alert-primary" role="alert">
-                            <b>{{ usuario.username }}::{{ usuario.roles[0] }}</b>
+                            <p><b>Usuario:&nbsp;</b>{{ usuario.username }}</p>
+                            <p><b>Roles:&nbsp;</b> {{ usuario.roles[0] }}</p>
+                            <p><b>Fecha que se Registr&oacute;:</b>&nbsp;
+
+                                {% if usuario.fechaRegistracion == NULL %}
+                                       NO se ha Registrado.
+                                {% else %}
+                                       {{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }}
+                                {% endif %}
+
+                              </p>
                                 <table class="table">
                                   <thead class="thead-dark">
                                     <tr>

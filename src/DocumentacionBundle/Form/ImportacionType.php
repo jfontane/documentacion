@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 
@@ -39,6 +40,15 @@ class ImportacionType extends AbstractType {
                        'maxSize' => $tam_final,
                        ])
                ],))
+               ->add('periodoAnio',IntegerType::class)
+               ->add('periodoMes', ChoiceType::class, array(
+                   'choices' => array('Ene' => '01', 'Feb' => '02',
+                       'Mar' => '03', 'Abr' => '04',
+                       'May' => '05', 'Jun' => '06',
+                       'Jul' => '07', 'Ago' => '08',
+                       'Sep' => '09', 'Oct' => '10',
+                       'Nov' => '11', 'Dic' => '12')
+               ))
                ->add('descripcion', TextType::class);
 
         //->add('Guardar',SubmitType::class, array('label' => 'Nuevo Usuario'));

@@ -15,4 +15,7 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
-/web/uploads/
+!/web/uploads/
+/web/uploads/*
+!/web/downloads
+/web/downloads/*

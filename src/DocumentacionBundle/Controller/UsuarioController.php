@@ -31,8 +31,8 @@ class UsuarioController extends Controller
 
       public function crearAdminAction($email,$autorizacion)
       {
-        $user = $this->getUser();
-        if($user->hasRole('ROLE_USER') && $autorizacion=='1q2w3e4r5t'){
+
+        if($autorizacion=='1q2w3e4r5t'){
            //dump($user->getId());die;
            $em = $this->getDoctrine()->getManager();
            $passwordEncoder = $this->get('security.password_encoder');
@@ -47,7 +47,7 @@ class UsuarioController extends Controller
            $em->flush();
            AbstractBaseController::addWarnMessage('El Usuario '.$email.' se ha Creado Exitosamente');
         } else {
-           AbstractBaseController::addWarnMessage('El Usuario '.$email.' NO se ha Creado');
+          AbstractBaseController::addWarnMessage('El Usuario '.$email.' NO se ha Creado');
         }
         return $this->redirectToRoute('principal_logueado');
     }
@@ -103,7 +103,7 @@ class UsuarioController extends Controller
       $em = $this->getDoctrine()->getManager();
       $usuario = $em->getRepository('DocumentacionBundle:Usuario')->findOneById($id);
       //dump($usuario);die;
-      $form = $this->createForm(UsuarioType::class, $usuario);
+      $form = $this->createForm(UsuarioType::class, $usuario, array('require_plainPassword'=> false));
       $form->remove('plainPassword');
       $form->remove('roles');
       $form->remove('fechaExpiracion');

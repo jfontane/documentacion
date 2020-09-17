@@ -46,7 +46,6 @@ class DocumentoController extends Controller
 
         public function descargarAction($id)
         {
-
               $em = $this->getDoctrine()->getManager();
               $documento = $em->getRepository('DocumentacionBundle:Documento')->find($id);
               $fileName = $documento->getArchivo();
@@ -58,10 +57,12 @@ class DocumentoController extends Controller
               $response->headers->set('Content-Disposition', 'attachment;filename="'.$fileName);
               $response->setContent($content);
               if ($response != NULL) {
-                $documento->setCantidadVisitas($documento->getCantidadVisitas()+1);
-                $em->persist($documento);
-                $em->flush();
-
+                $user = $this->getUser();
+                if($user->hasRole('ROLE_USER')){
+                    $documento->setCantidadVisitas($documento->getCantidadVisitas()+1);
+                    $em->persist($documento);
+                    $em->flush();
+               }
               };
               return $response;
         }

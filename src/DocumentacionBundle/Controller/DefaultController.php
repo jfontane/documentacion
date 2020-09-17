@@ -65,6 +65,7 @@ class DefaultController extends Controller {
                  $password = $passwordEncoder->encodePassword($usuario, $password_aleatoria);
                  $usuario->setPassword($password);
                  $usuario->setFechaExpiracion(new \DateTime($fecha_expiracion));
+                 $usuario->setFechaRegistracion(new \DateTime($fecha_expiracion));
                  $em->persist($usuario);
                  $em->flush();
                  // EN ESTA INSTANCIA SE DEBERA MANDAR EL EMAIL CON LA CLAVE.

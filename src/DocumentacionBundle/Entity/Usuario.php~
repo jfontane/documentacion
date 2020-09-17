@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @UniqueEntity(fields="username", message="Username already taken")
  */
-class Usuario implements UserInterface {
+class Usuario implements UserInterface, \Serializable {
 
     /**
      * @ORM\Id
@@ -27,7 +27,6 @@ class Usuario implements UserInterface {
     private $username;
 
     /**
-     * @Assert\NotBlank
      * @Assert\Length(max=4096)
      */
     private $plainPassword;
@@ -50,6 +49,12 @@ class Usuario implements UserInterface {
      * @Assert\NotBlank
      */
     private $fechaExpiracion;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\NotBlank
+     */
+    private $fechaRegistracion;
 
     /**
      * Many Personas have Many Documentos.
@@ -176,4 +181,28 @@ class Usuario implements UserInterface {
     {
         return $this->documentos;
     }
+
+    /** @see \Serializable::serialize() */
+   public function serialize()
+   {
+       return serialize(array(
+           $this->id,
+           $this->username,
+           $this->password,
+           // ver la sección salt debajo
+           // $this->salt,
+       ));
+   }
+
+   /** @see \Serializable::unserialize() */
+   public function unserialize($serialized)
+   {
+       list (
+           $this->id,
+           $this->username,
+           $this->password,
+           // ver la sección salt debajo
+           // $this->salt
+       ) = unserialize($serialized);
+   }
 }

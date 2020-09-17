@@ -90,9 +90,13 @@ class ImportacionController extends Controller {
         $tipo_importacion = $importacion->getNombre();
         $esta_procesado = $importacion->getProcesado();
         $fileName = $id.'_'.$importacion->getNombre() . '.txt';
+        $periodoAnio = $importacion->getPeriodoAnio();
+        $periodoMes_tmp = $importacion->getPeriodoMes();
+        $periodoMes = ($periodoMes_tmp>0 && $periodoMes_tmp<10)?('0'.$periodoMes_tmp):$periodoMes_tmp;
+
         if ($esta_procesado == 'No') {
             if ($tipo_importacion == 'Beneficios') {
-                $this->procesarArchivo($fileName);
+                $this->procesarArchivo($fileName,$periodoAnio,$periodoMes);
                 $importacion->setProcesado('Si');
                 $em->persist($importacion);
                 $em->flush();
@@ -103,7 +107,7 @@ class ImportacionController extends Controller {
         return $this->redirectToRoute('admin_importacion_listar');
     }
 
-    private function procesarArchivo($fileName) {
+    private function procesarArchivo($fileName,$periAnio,$periMes) {
         $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $lineas = count($archivo);
         $em = $this->getDoctrine()->getManager();
@@ -120,8 +124,8 @@ class ImportacionController extends Controller {
             $documento->setCuil($cuil);
             $documento->setArchivo($nombre_archivo);
             $documento->setDescripcion($descripcion);
-            $documento->setPeriodoAnio('2020');
-            $documento->setPeriodoMes('08');
+            $documento->setPeriodoAnio($periAnio);
+            $documento->setPeriodoMes($periMes);
             //BUSCO SI YA EXISTE EL EMAIL
             $perso = $em->getRepository('DocumentacionBundle:Usuario')->findOneBy(array('username' => $email_arreglado));
             //SI NO EXISTE PERSISTO EL USUARIO Y LA VINCULO AL DOCUMENTO
@@ -132,11 +136,11 @@ class ImportacionController extends Controller {
               $usuario->setPassword($password);
               $usuario->setRoles('ROLE_USER');
               $usuario->setFechaExpiracion(new \DateTime('now'));
+              $usuario->setFechaRegistracion(NULL);
               $em->persist($usuario);
               $documento->addUsuario($usuario);
             } else { // SI YA EXISTE EL USUARIO LA VINCULO AL DOCUMENTO
               $documento->addUsuario($perso);
-
             };
             $em->persist($documento);
             $em->flush();

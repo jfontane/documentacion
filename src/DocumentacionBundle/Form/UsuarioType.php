@@ -17,11 +17,18 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class UsuarioType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+
+       /*if ($options['require_plainPassword']) {
+          $obligatorio_choice=array_merge($obligatorio_choice, array('Usuarios' => 'Usuarios', 'Organismos' => 'Organismos', 'Representantes' => 'Representantes',
+                              'Declaraciones_Organismo' => 'Declaraciones_Organismo'));
+       }*/
+
         $builder->add('username', TextType::class)
                 ->add('plainPassword', RepeatedType::class, [
                       'type' => PasswordType::class,
                             'first_options' => ['label' => 'Password'],
                             'second_options' => ['label' => 'Repeat Password'],
+                            'required' => false
                         ])
                 ->add('roles', ChoiceType::class, array(
                             'mapped' => false,
@@ -32,8 +39,10 @@ class UsuarioType extends AbstractType {
                 //->add('Guardar',SubmitType::class, array('label' => 'Nuevo Usuario'));
     }
 
+
     public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults(array('data_class' => 'DocumentacionBundle\Entity\Usuario'));
+        $resolver->setDefaults(array('data_class' => 'DocumentacionBundle\Entity\Usuario','require_plainPassword' => false));
+        $resolver->setAllowedTypes('require_plainPassword', 'bool');
     }
 
 }
