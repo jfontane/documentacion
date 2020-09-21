@@ -1,3 +1,7 @@
 documento_descargar:
     path:     /descargar/{id}
     defaults: { _controller: DocumentacionBundle:Documento:descargar }
+
+documento_eliminar_periodos:
+    path:     /eliminar_periodo/{anio}/{mes}
+    defaults: { _controller: DocumentacionBundle:Documento:vaciarPeriodo }

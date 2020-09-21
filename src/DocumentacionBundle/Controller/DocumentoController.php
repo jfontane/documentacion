@@ -67,5 +67,48 @@ class DocumentoController extends Controller
               return $response;
         }
 
+        public function vaciarPeriodoAction($anio,$mes)
+        {
+              $em = $this->getDoctrine()->getManager();
+              $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('periodoAnio' => $anio, 'periodoMes' => $mes));
+              dump($documento);die;
+
+/*
+$fs = new Filesystem();
+$fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileNamejubidat);
+$fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileNamejubi1ind);
+
+if (null == $declaracion) {
+    throw $this->createNotFoundException('No existe la Declaracion solicitada.');
+}
+$em->remove($declaracion);
+$em->flush();
+AbstractBaseController::addWarnMessage('La Declaracion del Periodo ' .
+        $declaracion->getPeriodoAnio() . '/' .
+        $declaracion->getPeriodoMes() .
+        ' se ha borrado correctamente.');
+*/
+
+              //$fileName = $documento->getArchivo();
+              /*
+              $path = $this->get('kernel')->getRootDir(). "/../web/downloads/";
+              $content = file_get_contents($path.$fileName);
+              $response = new Response();
+              //set headers
+              $response->headers->set('Content-Type', 'mime/type');
+              $response->headers->set('Content-Disposition', 'attachment;filename="'.$fileName);
+              $response->setContent($content);
+              if ($response != NULL) {
+                $user = $this->getUser();
+                if($user->hasRole('ROLE_USER')){
+                    $documento->setCantidadVisitas($documento->getCantidadVisitas()+1);
+                    $em->persist($documento);
+                    $em->flush();
+               }
+              };
+              return $response; */
+        }
+
+
 
 }
