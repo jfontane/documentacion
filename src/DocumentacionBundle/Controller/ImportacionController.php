@@ -24,10 +24,8 @@ class ImportacionController extends Controller {
         $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-                       $importaciones,
-                       $request->query->getInt('page', 1),
-                       2
-               );
+                $importaciones, $request->query->getInt('page', 1), 2
+        );
         return $this->render('@Documentacion/Importacion/listar.html.twig', array(
                     'pagination' => $pagination,
         ));
@@ -36,9 +34,9 @@ class ImportacionController extends Controller {
     public function borrarAction($id) {
         $em = $this->getDoctrine()->getManager();
         $importacion = $em->getRepository('DocumentacionBundle:Importacion')->findOneBy(array('id' => $id));
-        $fileName = $id.'_'.$importacion->getNombre() . '.txt';
+        $fileName = $id . '_' . $importacion->getNombre() . '.txt';
         $fs = new Filesystem();
-        $fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/'.$fileName);
+        $fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $em->remove($importacion);
         $em->flush();
         AbstractBaseController::addWarnMessage('El registro de La Importacion de ' .
@@ -51,7 +49,7 @@ class ImportacionController extends Controller {
         $user = $this->getUser();
         $user_name = $user->getUserName();
         $importacion = new Importacion();
-        $form = $this->createForm(ImportacionType::class, $importacion, array('bandera'=> true));
+        $form = $this->createForm(ImportacionType::class, $importacion, array('bandera' => true));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // 3) Encode the password (you could also do this via Doctrine listener)
@@ -73,7 +71,7 @@ class ImportacionController extends Controller {
             $em->persist($importacion);
             $em->flush();
 
-            $file_name = $importacion->getId().'_'.$importacion->getNombre() . ".txt";
+            $file_name = $importacion->getId() . '_' . $importacion->getNombre() . ".txt";
             $fileImportacion->move("uploads", $file_name);
             // maybe set a "flash" success message for the user
             // Mensaje para notificar al usuario que todo ha salido bien
@@ -89,14 +87,14 @@ class ImportacionController extends Controller {
         $importacion = $em->getRepository('DocumentacionBundle:Importacion')->findOneBy(array('id' => $id));
         $tipo_importacion = $importacion->getNombre();
         $esta_procesado = $importacion->getProcesado();
-        $fileName = $id.'_'.$importacion->getNombre() . '.txt';
+        $fileName = $id . '_' . $importacion->getNombre() . '.txt';
         $periodoAnio = $importacion->getPeriodoAnio();
         $periodoMes_tmp = $importacion->getPeriodoMes();
-        $periodoMes = ($periodoMes_tmp>0 && $periodoMes_tmp<10)?('0'.$periodoMes_tmp):$periodoMes_tmp;
+        $periodoMes = ($periodoMes_tmp > 0 && $periodoMes_tmp < 10) ? ('0' . $periodoMes_tmp) : $periodoMes_tmp;
 
         if ($esta_procesado == 'No') {
             if ($tipo_importacion == 'Beneficios') {
-                $this->procesarArchivo($fileName,$periodoAnio,$periodoMes);
+                $this->procesarArchivo($fileName, $periodoAnio, $periodoMes);
                 $importacion->setProcesado('Si');
                 $em->persist($importacion);
                 $em->flush();
@@ -107,7 +105,7 @@ class ImportacionController extends Controller {
         return $this->redirectToRoute('admin_importacion_listar');
     }
 
-    private function procesarArchivo($fileName,$periAnio,$periMes) {
+    private function procesarArchivo($fileName, $periAnio, $periMes) {
         $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $lineas = count($archivo);
         $em = $this->getDoctrine()->getManager();
@@ -120,7 +118,7 @@ class ImportacionController extends Controller {
             $nombre_archivo = explode(';', $archivo[$i])[1];
             $descripcion = explode(';', $archivo[$i])[2];
             $email = explode(';', $archivo[$i])[3];
-            $email_arreglado = str_replace (array("\r\n", "\n", "\r"), '', $email);
+            $email_arreglado = str_replace(array("\r\n", "\n", "\r"), '', $email);
             $documento->setCuil($cuil);
             $documento->setArchivo($nombre_archivo);
             $documento->setDescripcion($descripcion);
@@ -130,22 +128,21 @@ class ImportacionController extends Controller {
             $perso = $em->getRepository('DocumentacionBundle:Usuario')->findOneBy(array('username' => $email_arreglado));
             //SI NO EXISTE PERSISTO EL USUARIO Y LA VINCULO AL DOCUMENTO
             if (NULL == $perso) {
-              $usuario->setUsername($email_arreglado);
-              $usuario->setPlainPassword('12345');
-              $password = $passwordEncoder->encodePassword($usuario, $usuario->getPlainPassword());
-              $usuario->setPassword($password);
-              $usuario->setRoles('ROLE_USER');
-              $usuario->setFechaExpiracion(new \DateTime('now'));
-              $usuario->setFechaRegistracion(NULL);
-              $em->persist($usuario);
-              $documento->addUsuario($usuario);
+                $usuario->setUsername($email_arreglado);
+                $usuario->setPlainPassword('12345');
+                $password = $passwordEncoder->encodePassword($usuario, $usuario->getPlainPassword());
+                $usuario->setPassword($password);
+                $usuario->setRoles('ROLE_USER');
+                $usuario->setFechaExpiracion(new \DateTime('now'));
+                $usuario->setFechaRegistracion(NULL);
+                $em->persist($usuario);
+                $documento->addUsuario($usuario);
             } else { // SI YA EXISTE EL USUARIO LA VINCULO AL DOCUMENTO
-              $documento->addUsuario($perso);
+                $documento->addUsuario($perso);
             };
             $em->persist($documento);
             $em->flush();
         }; // END FOR
     }
-
 
 }
