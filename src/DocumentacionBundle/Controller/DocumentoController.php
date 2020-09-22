@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 
 class DocumentoController extends Controller
@@ -14,10 +15,28 @@ class DocumentoController extends Controller
     {
       $em = $this->getDoctrine()->getManager();
       $documentos = $em->getRepository('DocumentacionBundle:Documento')->findAll();
-      $cantidad_documentos = count($documentos);
-      //dump($cantidad_documentos);die;
+      //dump($documentos);die;
+      $ARRAY_DOCUMENTOS = array();
+      foreach ($documentos as $documento) {
+         $ARR_TMP = array();
+         $ARR_TMP['id'] = $documento->getId();
+         $ARR_TMP['cuil'] = $documento->getCuil();
+         $ARR_TMP['archivo'] = $documento->getArchivo();
+         $ARR_TMP['periodoAnio'] = $documento->getPeriodoAnio();
+         $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
+         $ARR_TMP['descripcion'] = $documento->getDescripcion();
+         $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
+         if ($this->existeArchivo($documento->getArchivo())) {
+             $ARR_TMP['archivoFisico'] = 'Si';
+         } else {
+             $ARR_TMP['archivoFisico'] = 'No';
+         }
 
-      return $this->render('@Documentacion\Documento\listar.html.twig', array('documentos'=>$documentos));
+         array_push($ARRAY_DOCUMENTOS,$ARR_TMP);
+      }
+        //dump($ARRAY_DOCUMENTOS);die;
+
+      return $this->render('@Documentacion\Documento\listar.html.twig', array('documentos'=>$ARRAY_DOCUMENTOS));
     }
 
 
@@ -67,48 +86,79 @@ class DocumentoController extends Controller
               return $response;
         }
 
-        public function vaciarPeriodoAction($anio,$mes)
+        public function eliminarPeriodoAction($anio,$mes)
         {
+              $fs = new Filesystem();
               $em = $this->getDoctrine()->getManager();
-              $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('periodoAnio' => $anio, 'periodoMes' => $mes));
-              dump($documento);die;
+              $documentos = $em->getRepository('DocumentacionBundle:Documento')->findby(array('periodoAnio' => $anio, 'periodoMes' => $mes));
+              foreach ($documentos as $documento) {
+                 $file_name = $documento->getArchivo();
+                 $fs->remove($this->get('kernel')->getRootDir() . '/../web/downloads/' . $file_name);
+                 $em->remove($documento);
+                 $em->flush();
+              }
 
-/*
-$fs = new Filesystem();
-$fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileNamejubidat);
-$fs->remove($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileNamejubi1ind);
-
-if (null == $declaracion) {
-    throw $this->createNotFoundException('No existe la Declaracion solicitada.');
-}
-$em->remove($declaracion);
-$em->flush();
-AbstractBaseController::addWarnMessage('La Declaracion del Periodo ' .
-        $declaracion->getPeriodoAnio() . '/' .
-        $declaracion->getPeriodoMes() .
-        ' se ha borrado correctamente.');
-*/
-
-              //$fileName = $documento->getArchivo();
-              /*
-              $path = $this->get('kernel')->getRootDir(). "/../web/downloads/";
-              $content = file_get_contents($path.$fileName);
-              $response = new Response();
-              //set headers
-              $response->headers->set('Content-Type', 'mime/type');
-              $response->headers->set('Content-Disposition', 'attachment;filename="'.$fileName);
-              $response->setContent($content);
-              if ($response != NULL) {
-                $user = $this->getUser();
-                if($user->hasRole('ROLE_USER')){
-                    $documento->setCantidadVisitas($documento->getCantidadVisitas()+1);
-                    $em->persist($documento);
-                    $em->flush();
-               }
-              };
-              return $response; */
+          die;
         }
 
+
+
+        public function buscarArchivosSobrantesPorNombreAction()
+        {
+            $em = $this->getDoctrine()->getManager();
+            $finder = new Finder();
+            $finder->files()->in('./../web/downloads');
+            foreach ($finder as $file) {
+            $file_name = $file->getRelativePathname();
+            $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $file_name));
+            if (NULL == $documento) {
+               dump($file_name);
+            }
+
+
+            }
+            die;
+        }
+
+
+        public function eliminarArchivosSobrantesPorNombreAction()
+        {
+            $em = $this->getDoctrine()->getManager();
+            $finder = new Finder();
+            $fs = new Filesystem();
+            $finder->files()->in('./../web/downloads');
+            foreach ($finder as $file) {
+            $file_name = $file->getRelativePathname();
+            $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $file_name));
+            if (NULL == $documento) { // SIGNIFICA QUE QUE EL ARCHIVO FISICO NO ESTA EN LA BASE DE DATOS POR LO TANTO SOBRA
+               dump($file_name);
+               $fs->remove($this->get('kernel')->getRootDir() . '/../web/downloads/' . $file_name);
+            }
+
+
+            }
+            die;
+        }
+
+
+        public function existeArchivo($nombre_archivo)
+        {
+            $existe = false;
+            //dump($nombre_archivo);die;
+
+            $finder = new Finder();
+            $finder->files()->in('./../web/downloads');
+            //dump($finder);die;
+            foreach ($finder as $file) {
+              //dump($nombre_archivo);die;
+            $file_name = $file->getRelativePathname();
+                if ($nombre_archivo == $file_name) {
+                  $existe = true;
+                  break;
+                }
+            }
+            return $existe;
+        }
 
 
 }

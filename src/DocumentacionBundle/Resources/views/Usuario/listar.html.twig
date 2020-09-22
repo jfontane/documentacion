@@ -29,9 +29,9 @@
                           <p><b>Fecha que se Registr&oacute;:</b>&nbsp;
 
                               {% if usuario.fechaRegistracion == NULL %}
-                                     NO se ha Registrado.
+                                     <font color='red'>NO se ha Registrado.</font>
                               {% else %}
-                                     {{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }}
+                                    <font color='blue'>    {{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }} </font>
                               {% endif %}
 
                             </p>

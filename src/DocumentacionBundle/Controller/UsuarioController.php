@@ -127,4 +127,5 @@ class UsuarioController extends Controller
       //                       die;
     }
 
+
 }

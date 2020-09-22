@@ -2,6 +2,18 @@ documento_descargar:
     path:     /descargar/{id}
     defaults: { _controller: DocumentacionBundle:Documento:descargar }
 
+admin_documentos_listar:
+    path:     /listar
+    defaults: { _controller: DocumentacionBundle:Documento:listarDocumentos }
+
 documento_eliminar_periodos:
     path:     /eliminar_periodo/{anio}/{mes}
-    defaults: { _controller: DocumentacionBundle:Documento:vaciarPeriodo }
+    defaults: { _controller: DocumentacionBundle:Documento:eliminarPeriodo }
+
+documento_listar_sobrantes:
+    path:     /listar/sobrantes
+    defaults: { _controller: DocumentacionBundle:Documento:buscarArchivosSobrantesPorNombre }
+
+documento_eliminar_sobrantes:
+    path:     /eliminar/sobrantes
+    defaults: { _controller: DocumentacionBundle:Documento:eliminarArchivosSobrantesPorNombre }
