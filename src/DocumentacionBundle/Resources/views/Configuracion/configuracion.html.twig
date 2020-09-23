@@ -1,0 +1,22 @@
+{% set activo = 'configuracion' %}
+{% extends "@Documentacion/layout.html.twig" %}
+{% block title 'Configuracion' %}
+{% block pageid 'admin' %}
+        {% block body %}
+            {# CONTENIDO ORIGINAL DEL ARCHIVO Y SIN LAS ETIQUETAS <html><body> � </body></html> #}
+            <H1>Opciones</H1>
+            <!-- MENSAJES FLASH ADMIN AQUÍ (utilizar <div class=”flash_admin”> </div>) -->
+            <div class="alert alert-warning" role="alert">
+                {% for mensaje in app.session.flashbag.get('warn') %}
+                    <p class="warn">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+            <table align='center'>
+              <tr>
+                <th>Lista de Archivos Fisicos sin Vincular a BD. <a href="{{ path('documento_listar_sobrantes') }}" class='btn btn-primary'>Listar</a> </th>
+              </tr>
+              <tr>
+                <th>Vaciar la Base de Datos. <a href="#" class='btn btn-primary'>Vaciar</a> </th>
+              </tr>
+            </table>
+        {% endblock %}

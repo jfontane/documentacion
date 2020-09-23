@@ -1,0 +1,13 @@
+{% set activo = 'error' %}
+{% extends "@Documentacion/layout.html.twig" %}
+{% block title 'Error' %}
+{% block body %}
+            {# CONTENIDO ORIGINAL DEL ARCHIVO Y SIN LAS ETIQUETAS <html><body> � </body></html> #}
+            <h3> <font color='red'>  ATENCION:</font></h3>
+            <!-- MENSAJES FLASH ADMIN AQUÍ (utilizar <div class=”flash_admin”> </div>) -->
+            <div class="alert alert-warning" role="alert">
+                {% for mensaje in app.session.flashbag.get('warn') %}
+                    <p class="warn">{{ mensaje }}</p>
+                {% endfor %}
+            </div>
+{% endblock %}

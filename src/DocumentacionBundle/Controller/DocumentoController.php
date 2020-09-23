@@ -8,57 +8,40 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class DocumentoController extends Controller {
 
-    public function listarDocumentosAction() {
-        $em = $this->getDoctrine()->getManager();
-        $documentos = $em->getRepository('DocumentacionBundle:Documento')->findAll();
-        //dump($documentos);die;
-        $ARRAY_DOCUMENTOS = array();
-        foreach ($documentos as $documento) {
-            $ARR_TMP = array();
-            $ARR_TMP['id'] = $documento->getId();
-            $ARR_TMP['cuil'] = $documento->getCuil();
-            $ARR_TMP['archivo'] = $documento->getArchivo();
-            $ARR_TMP['periodoAnio'] = $documento->getPeriodoAnio();
-            $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
-            $ARR_TMP['descripcion'] = $documento->getDescripcion();
-            $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
-            if ($this->existeArchivo($documento->getArchivo())) {
-                $ARR_TMP['archivoFisico'] = 'Si';
-            } else {
-                $ARR_TMP['archivoFisico'] = 'No';
+    public function listarDocumentosAction(UserInterface $usuario) {
+      if ($usuario->hasRole('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
+            $documentos = $em->getRepository('DocumentacionBundle:Documento')->findAll();
+            //dump($documentos);die;
+            $ARRAY_DOCUMENTOS = array();
+            $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
+            foreach ($documentos as $documento) {
+                $ARR_TMP = array();
+                $ARR_TMP['id'] = $documento->getId();
+                $ARR_TMP['cuil'] = $documento->getCuil();
+                $ARR_TMP['archivo'] = $documento->getArchivo();
+                $ARR_TMP['periodoAnio'] = $documento->getPeriodoAnio();
+                $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
+                $ARR_TMP['descripcion'] = $documento->getDescripcion();
+                $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
+                if ($this->existeArchivo($documento->getArchivo(), $archivos)) {
+                    $ARR_TMP['archivoFisico'] = 'Si';
+                } else {
+                    $ARR_TMP['archivoFisico'] = 'No';
+                }
+                array_push($ARRAY_DOCUMENTOS, $ARR_TMP);
             }
-
-            array_push($ARRAY_DOCUMENTOS, $ARR_TMP);
+            return $this->render('@Documentacion\Documento\listar.html.twig', array('documentos' => $ARRAY_DOCUMENTOS));
+        } else {
+          AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                  . '" no puede realizar esta operacion.');
+          return $this->render('@Documentacion\Default\error.html.twig');
         }
-        //dump($ARRAY_DOCUMENTOS);die;
-
-        return $this->render('@Documentacion\Documento\listar.html.twig', array('documentos' => $ARRAY_DOCUMENTOS));
-    }
-
-    public function getArchivoAction($id) {
-        $em = $this->getDoctrine()->getManager();
-        $documento = $em->getRepository('DocumentacionBundle:Documento')->find($id);
-        $fileName = $documento->getArchivo();
-        // Para borrar el archivo
-        //    $fs = new Filesystem();
-        //    $fs->remove($this->get('kernel')->getRootDir().'/../web/uploads/'.$file_name);
-        $arch = new File($this->get('kernel')->getRootDir() . '/../web/upload/' . $fileName);
-        return $this->file($arch, $fileName);
-
-
-        /* $file = stream_get_contents($declaracion->getJubidat(), -1, 0);
-          //dump(strlen($file));die;
-          $size = strlen($file);
-
-          $response = new Response($file, 200, array(
-          'Content-Type' => 'application/octet-stream',
-          'Content-Length' => $size,
-          'Content-Disposition' => 'attachment; filename="jubi.dat"',
-          ));
-          return $response; */
     }
 
     public function descargarAction($id) {
@@ -83,7 +66,7 @@ class DocumentoController extends Controller {
         return $response;
     }
 
-    public function eliminarPeriodoAction($anio, $mes) {
+    public function eliminarPeriodoAction($anio, $mes) { // FALTA TERMINAR
         $fs = new Filesystem();
         $em = $this->getDoctrine()->getManager();
         $documentos = $em->getRepository('DocumentacionBundle:Documento')->findby(array('periodoAnio' => $anio, 'periodoMes' => $mes));
@@ -97,51 +80,66 @@ class DocumentoController extends Controller {
         die;
     }
 
-    public function buscarArchivosSobrantesPorNombreAction() {
-        $em = $this->getDoctrine()->getManager();
-        $finder = new Finder();
-        $finder->files()->in('./../web/downloads');
-        foreach ($finder as $file) {
-            $file_name = $file->getRelativePathname();
-            $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $file_name));
-            if (NULL == $documento) {
-                dump($file_name);
+    public function archivosFisicosSobrantesAction(UserInterface $usuario) {
+        if ($usuario->hasRole('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
+            $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
+            $ARRAY_ARCHIVOS_FISICOS_SOBRANTES = array();
+            foreach ($archivos as $archivo) {
+                if ($archivo!='.' && $archivo!='..') {
+                  $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $archivo));
+                  if (NULL == $documento) {
+                      $ARRAY_ARCHIVOS_FISICOS_SOBRANTES_ITEM = array();
+                      $ARRAY_ARCHIVOS_FISICOS_SOBRANTES_ITEM['archivo'] = $archivo;
+                      array_push($ARRAY_ARCHIVOS_FISICOS_SOBRANTES,$ARRAY_ARCHIVOS_FISICOS_SOBRANTES_ITEM);
+                  }
+                }
             }
-        }
-        die;
+            $cantidadDocumentos = count($ARRAY_ARCHIVOS_FISICOS_SOBRANTES);
+            return $this->render('@Documentacion\Configuracion\listarFisicosSobrantes.html.twig', array(
+                                   'documentos' => $ARRAY_ARCHIVOS_FISICOS_SOBRANTES,
+                                   'cantidad' => $cantidadDocumentos
+            ));
+          } else {
+            AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                    . '" no puede realizar esta operacion.');
+            return $this->render('@Documentacion\Default\error.html.twig');
+          }
+
     }
 
-    public function eliminarArchivosSobrantesPorNombreAction() {
-        $em = $this->getDoctrine()->getManager();
-        $finder = new Finder();
-        $fs = new Filesystem();
-        $finder->files()->in('./../web/downloads');
-        foreach ($finder as $file) {
-            $file_name = $file->getRelativePathname();
-            $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $file_name));
-            if (NULL == $documento) { // SIGNIFICA QUE QUE EL ARCHIVO FISICO NO ESTA EN LA BASE DE DATOS POR LO TANTO SOBRA
-                dump($file_name);
-                $fs->remove($this->get('kernel')->getRootDir() . '/../web/downloads/' . $file_name);
+    public function eliminarArchivosSobrantesAction(UserInterface $usuario) {
+       if ($usuario->hasRole('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
+            $archivos = scandir('./../web/downloads');
+            $fs = new Filesystem();
+            foreach ($archivos as $archivo) {
+               if ($archivo!='.' && $archivo!='..') {
+                    $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $archivo));
+                    if (NULL == $documento) { // SIGNIFICA QUE QUE EL ARCHIVO FISICO NO ESTA EN LA BASE DE DATOS POR LO TANTO SOBRA
+                        //dump($archivo);
+                        $fs->remove($this->get('kernel')->getRootDir() . '/../web/downloads/' . $archivo);
+                    }
+              }
             }
+            AbstractBaseController::addWarnMessage('Atencion: Los archivos que NO estan vinculados a la Base de Datos se eliminaron correctamente.');
+            return $this->redirectToRoute('documento_listar_sobrantes');
+        } else {
+          AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                  . '" no puede realizar esta operacion.');
+          return $this->render('@Documentacion\Default\error.html.twig');
         }
-        die;
     }
 
-    public function existeArchivo($nombre_archivo) {
+
+    public function existeArchivo($nombre_archivo, $archivos) {
         $existe = false;
-        //dump($nombre_archivo);die;
-
-        $finder = new Finder();
-        $finder->files()->in('./../web/downloads');
-        //dump($finder);die;
-        foreach ($finder as $file) {
-            //dump($nombre_archivo);die;
-            $file_name = $file->getRelativePathname();
-            if ($nombre_archivo == $file_name) {
+        foreach ($archivos as $archivo) {
+                if ($archivo == $nombre_archivo) {
                 $existe = true;
                 break;
-            }
-        }
+              } // END IF
+        } // END FOREACH
         return $existe;
     }
 

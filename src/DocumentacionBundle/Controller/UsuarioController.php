@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UsuarioController extends Controller {
 
-    public function documentosAction(Request $request) {
+    public function listarDocumentosAction(Request $request) {
         $user = $this->getUser();
         if ($user->hasRole('ROLE_USER')) {
             //dump($user->getId());die;
@@ -28,9 +28,7 @@ class UsuarioController extends Controller {
     }
 
     public function crearAdminAction($email, $autorizacion) {
-
         if ($autorizacion == '1q2w3e4r5t') {
-            //dump($user->getId());die;
             $em = $this->getDoctrine()->getManager();
             $passwordEncoder = $this->get('security.password_encoder');
             $usuario = new Usuario();
@@ -60,7 +58,6 @@ class UsuarioController extends Controller {
             $pagination = $paginator->paginate(
                     $usuarios, $request->query->getInt('page', 1), 10
             );
-
             return $this->render('@Documentacion\Usuario\listar.html.twig', array(
                         'pagination' => $pagination
                             )
@@ -120,5 +117,34 @@ class UsuarioController extends Controller {
                     'usuario' => $usuario));
         //                       die;
     }
+
+
+    public function cambiarPasswordAction(Request $request, UserInterface $usuario) {
+      $passwordEncoder = $this->get('security.password_encoder');
+      //dump($usuario);die;
+      $form = $this->createForm(UsuarioType::class, $usuario, array('require_plainPassword' => false));
+      $form->remove('username');
+      $form->remove('roles');
+      $form->remove('fechaExpiracion');
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()) {
+        //$evento->setDescripcion($this->get('eventos.util')->autoLinkText($evento->getDescripcion()));
+        $password = $passwordEncoder->encodePassword($usuario, $usuario->getPlainPassword());
+        $usuario->setPassword($password);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($usuario);
+        $em->flush();
+        AbstractBaseController::addWarnMessage('La Contraseña del Usuario "' . $usuario->getUsername()
+        . '" se ha modificado correctamente.');
+        //  $this->get('eventos.notificacion')->sendToAll('Symfony 2020!', 'Se ha actualizado el evento '.$organismo->getNombre().'.');
+        return $this->redirect($this->generateUrl('principal_logueado'));
+      }
+      return $this->render('@Documentacion/Usuario/editarPassword.html.twig'
+      , array('form' => $form->createView(), 'usuario' => $usuario
+    ));
+    }
+
+
 
 }

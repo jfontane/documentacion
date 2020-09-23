@@ -19,3 +19,7 @@ logout:
 principal_logueado:
     path: /principal
     defaults: { _controller: DocumentacionBundle:Default:principal }
+
+admin_configuracion:
+    path: /configuracion
+    defaults: { _controller: DocumentacionBundle:Configuracion:configuracion }

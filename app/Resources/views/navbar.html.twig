@@ -30,6 +30,12 @@
           </li>
           </ul>
           <ul class="list-inline custom-icon-middle">
+            {% if activo=='configuracion'  %}
+               <li class="list-inline-item active"><a href="{{ path('admin_configuracion') }}" title="Configuracion"><i class="material-icons">settings</i></a>
+            {% else %}
+               <li class="list-inline-item"><a href="{{ path('admin_configuracion') }}" title="Configuracion"><i class="material-icons">settings</i></a>
+            {% endif %}
+            </li>
           <li class="list-inline-item">
           <a href="#" class="dropdown-toggle" id="dropdownMenuLinkPerson" data-toggle="dropdown"
           aria-haspopup="true"

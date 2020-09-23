@@ -9,7 +9,7 @@ admin_usuarios_crear_admin:
 
 usuario_documentos_listar:
     path:     /documentos
-    defaults: { _controller: DocumentacionBundle:Usuario:documentos }
+    defaults: { _controller: DocumentacionBundle:Usuario:listarDocumentos }
 
 usuario_cambiar_password:
     path:     /cambiar_password
