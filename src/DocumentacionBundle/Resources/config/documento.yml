@@ -6,14 +6,22 @@ admin_documentos_listar:
     path:     /listar
     defaults: { _controller: DocumentacionBundle:Documento:listarDocumentos }
 
+admin_documentos_activar:
+    path:     /activar/{estado}
+    defaults: { _controller: DocumentacionBundle:Documento:activarDocumentos }
+
 documento_eliminar_periodos:
     path:     /eliminar_periodo/{anio}/{mes}
     defaults: { _controller: DocumentacionBundle:Documento:eliminarPeriodo }
 
 documento_listar_sobrantes:
     path:     /listar/sobrantes
-    defaults: { _controller: DocumentacionBundle:Documento:archivosFisicosSobrantes }
+    defaults: { _controller: DocumentacionBundle:Documento:listarArchivosFisicosSobrantes }
 
 documento_eliminar_sobrantes:
     path:     /eliminar/sobrantes
     defaults: { _controller: DocumentacionBundle:Documento:eliminarArchivosSobrantes }
+
+documento_eliminar_sobrante:
+    path:     /eliminar/sobrante/{nombre}
+    defaults: { _controller: DocumentacionBundle:Documento:eliminarArchivoFisicoSobrante }

@@ -1,15 +1,10 @@
-admin_usuarios_listar:
-    path:     /listar
-    defaults: { _controller: DocumentacionBundle:Usuario:listar }
-
 admin_usuarios_crear_admin:
     path:     /crear/{email}/{autorizacion}
     defaults: { _controller: DocumentacionBundle:Usuario:crearAdmin }
 
-
-usuario_documentos_listar:
-    path:     /documentos
-    defaults: { _controller: DocumentacionBundle:Usuario:listarDocumentos }
+usuarios_listar:
+    path:     /listar
+    defaults: { _controller: DocumentacionBundle:Usuario:listar }
 
 usuario_cambiar_password:
     path:     /cambiar_password
@@ -18,3 +13,11 @@ usuario_cambiar_password:
 usuario_editar_email:
     path:     /editarEmail/{id}
     defaults: { _controller: DocumentacionBundle:Usuario:editarEmail }
+    requirements:
+        id: \d+
+
+admin_usuario_eliminar:
+    path:     /eliminar/{id}
+    defaults: { _controller: DocumentacionBundle:Usuario:eliminar }
+    requirements:
+        id: \d+

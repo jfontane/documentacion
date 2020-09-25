@@ -17,9 +17,9 @@ class DocumentoController extends Controller {
       if ($usuario->hasRole('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
             $documentos = $em->getRepository('DocumentacionBundle:Documento')->findAll();
-            //dump($documentos);die;
             $ARRAY_DOCUMENTOS = array();
             $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
+            $cantidad = 0;
             foreach ($documentos as $documento) {
                 $ARR_TMP = array();
                 $ARR_TMP['id'] = $documento->getId();
@@ -29,6 +29,7 @@ class DocumentoController extends Controller {
                 $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
                 $ARR_TMP['descripcion'] = $documento->getDescripcion();
                 $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
+                $cantidad++;
                 if ($this->existeArchivo($documento->getArchivo(), $archivos)) {
                     $ARR_TMP['archivoFisico'] = 'Si';
                 } else {
@@ -36,7 +37,10 @@ class DocumentoController extends Controller {
                 }
                 array_push($ARRAY_DOCUMENTOS, $ARR_TMP);
             }
-            return $this->render('@Documentacion\Documento\listar.html.twig', array('documentos' => $ARRAY_DOCUMENTOS));
+            return $this->render('@Documentacion\Documento\listar.html.twig', array(
+                                                       'documentos' => $ARRAY_DOCUMENTOS,
+                                                       'cantidad' => $cantidad
+                                ));
         } else {
           AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
                   . '" no puede realizar esta operacion.');
@@ -47,7 +51,7 @@ class DocumentoController extends Controller {
     public function descargarAction($id) {
         $em = $this->getDoctrine()->getManager();
         $documento = $em->getRepository('DocumentacionBundle:Documento')->find($id);
-        $fileName = $documento->getArchivo();
+        $fileName = utf8_decode($documento->getArchivo());
         $path = $this->get('kernel')->getRootDir() . "/../web/downloads/";
         $content = file_get_contents($path . $fileName);
         $response = new Response();
@@ -66,26 +70,14 @@ class DocumentoController extends Controller {
         return $response;
     }
 
-    public function eliminarPeriodoAction($anio, $mes) { // FALTA TERMINAR
-        $fs = new Filesystem();
-        $em = $this->getDoctrine()->getManager();
-        $documentos = $em->getRepository('DocumentacionBundle:Documento')->findby(array('periodoAnio' => $anio, 'periodoMes' => $mes));
-        foreach ($documentos as $documento) {
-            $file_name = $documento->getArchivo();
-            $fs->remove($this->get('kernel')->getRootDir() . '/../web/downloads/' . $file_name);
-            $em->remove($documento);
-            $em->flush();
-        }
 
-        die;
-    }
-
-    public function archivosFisicosSobrantesAction(UserInterface $usuario) {
+    public function listarArchivosFisicosSobrantesAction(UserInterface $usuario) {
         if ($usuario->hasRole('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
             $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
             $ARRAY_ARCHIVOS_FISICOS_SOBRANTES = array();
             foreach ($archivos as $archivo) {
+                $archivo = utf8_encode($archivo);
                 if ($archivo!='.' && $archivo!='..') {
                   $documento = $em->getRepository('DocumentacionBundle:Documento')->findby(array('archivo' => $archivo));
                   if (NULL == $documento) {
@@ -106,6 +98,20 @@ class DocumentoController extends Controller {
             return $this->render('@Documentacion\Default\error.html.twig');
           }
 
+    }
+
+    public function eliminarArchivoFisicoSobranteAction($nombre, UserInterface $usuario) { // FALTA TERMINA
+      if ($usuario->hasRole('ROLE_ADMIN')) {
+            $fs = new Filesystem();
+            $fs->remove($this->get('kernel')->getRootDir() . '/../web/downloads/' . utf8_decode($nombre));
+            AbstractBaseController::addWarnMessage('Atencion: El Archivo "' . $nombre
+                    . '" Se ha Eliminado Correctamente.');
+            return $this->redirectToRoute('documento_listar_sobrantes');
+      } else {
+          AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                  . '" no puede realizar esta operacion.');
+          return $this->render('@Documentacion\Default\error.html.twig');
+      }
     }
 
     public function eliminarArchivosSobrantesAction(UserInterface $usuario) {
@@ -132,10 +138,32 @@ class DocumentoController extends Controller {
     }
 
 
+    public function activarDocumentosAction($estado, UserInterface $usuario) {
+      if ($usuario->hasRole('ROLE_ADMIN')) {
+            if ($estado=='Si') $mensaje = "Se han Activado todos los Documentos.";
+            else $mensaje = "Se han Desactivado todos los Documentos.";
+            $em = $this->getDoctrine()->getManager();
+            $documentos = $em->getRepository('DocumentacionBundle:Documento')->findAll();
+            foreach ($documentos as $documento) {
+                $documento->setActivo($estado);
+                $em->persist($documento);
+                $em->flush();
+            }
+            AbstractBaseController::addWarnMessage('Atencion: '.$mensaje);
+            return $this->render('@Documentacion\Configuracion\configuracion.html.twig');
+        } else {
+          AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                  . '" no puede realizar esta operacion.');
+          return $this->render('@Documentacion\Default\error.html.twig');
+        }
+    }
+
+
+
     public function existeArchivo($nombre_archivo, $archivos) {
         $existe = false;
         foreach ($archivos as $archivo) {
-                if ($archivo == $nombre_archivo) {
+                if ($archivo == utf8_decode($nombre_archivo)) {
                 $existe = true;
                 break;
               } // END IF

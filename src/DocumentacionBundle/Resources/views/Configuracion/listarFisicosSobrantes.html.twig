@@ -23,7 +23,7 @@
         <br>
         <hr>
         {% if cantidad > 0  %}
-          <a href="{{ path('documento_eliminar_sobrantes') }}" class="btn btn-primary">Eliminar Todos</a>
+          <a id="btn_borrar_todos" href="#" class="btn btn-primary">Eliminar Todos</a>
           <br>
           <br>
         {% endif %}
@@ -48,7 +48,7 @@
                                             <td>{{ documento['archivo'] }}</td>
                                             <td>
 
-                                                <a href="#">
+                                                <a id="btn_borrar_uno" data-nombre="{{ documento['archivo'] }}" href="#">
                                                     <i class="material-icons">delete</i>
                                                 </a>
 
@@ -67,11 +67,27 @@
         </div>
     {% endblock %}
     {% block javascripts %}
-        <script>
-            function confirmaBorrar() {
-                if (confirm("Desea Eliminar un Evento???")) {
-                    //location.href
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $('a[id=btn_borrar_todos]').on('click', function () {
+                event.preventDefault();
+                var url = "{{ path('documento_eliminar_sobrantes') }}";
+                if (confirm('Esta seguro de Eliminar Todos los Archivos Sin Vinculacion??')) {
+                    $(location).attr('href', url);
                 }
-            }
-        </script>
+            });
+
+            $('a[id=btn_borrar_uno]').on('click', function () {
+                event.preventDefault();
+                nombre = $(this).data("nombre");
+                var url = "{{ path('documento_eliminar_sobrante', {'nombre': 'text'}) }}";
+                url = url.replace("text", nombre);
+                if (confirm('Esta seguro de Eliminar el Archivo Sin Vinculacion??')) {
+                    $(location).attr('href', url);
+                }
+            });
+
+        });
+    </script>
     {% endblock %}

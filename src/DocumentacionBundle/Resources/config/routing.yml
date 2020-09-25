@@ -23,3 +23,7 @@ principal_logueado:
 admin_configuracion:
     path: /configuracion
     defaults: { _controller: DocumentacionBundle:Configuracion:configuracion }
+
+admin_vaciar_tablas:
+    path: /vaciar/tablas
+    defaults: { _controller: DocumentacionBundle:Configuracion:vaciarTablas }

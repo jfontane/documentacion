@@ -56,6 +56,11 @@ class Documento
   private $cantidadVisitas = 0;
 
   /**
+   * @ORM\Column(type="string", length=255, columnDefinition="enum('Si', 'No')")
+   */
+  private $activo;
+
+  /**
    * Many Documentos have Many Usuarios.
    * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="documentos")
    * @ORM\JoinTable(name="documentos_usuarios")
@@ -255,5 +260,29 @@ class Documento
     public function getUsuarios()
     {
         return $this->usuarios;
+    }
+
+    /**
+     * Set activo
+     *
+     * @param string $activo
+     *
+     * @return Documento
+     */
+    public function setActivo($activo)
+    {
+        $this->activo = $activo;
+
+        return $this;
+    }
+
+    /**
+     * Get activo
+     *
+     * @return string
+     */
+    public function getActivo()
+    {
+        return $this->activo;
     }
 }

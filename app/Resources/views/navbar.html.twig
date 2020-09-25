@@ -19,7 +19,7 @@
           {% else  %}
           <li class="nav-item">
           {% endif  %}
-          <a class="nav-link" href="{{ path('admin_usuarios_listar') }}">Usuarios</a>
+          <a class="nav-link" href="{{ path('usuarios_listar') }}">Usuarios</a>
           </li>
           {% if activo=='documentos'  %}
           <li class="nav-item active">
@@ -57,7 +57,7 @@
       {% else  %}
           <li class="nav-item">
       {% endif  %}
-        <a class="nav-link" href="{{ path('usuario_documentos_listar') }}">Documentos<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{{ path('usuarios_listar') }}">Documentos<span class="sr-only">(current)</span></a>
         </li>
         </ul>
         <ul class="list-inline custom-icon-middle">

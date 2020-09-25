@@ -49,20 +49,22 @@
                                   </thead>
                                   <tbody>
                                   {% for documento in usuario.documentos %}
-                                  <tr>
-                                    <td>{{documento.cuil}}</td>
-                                    <td>{{documento.periodoAnio}}/{{documento.periodoMes}}</td>
-                                    <td>
-                                      {% if documento.cantidadVisitas > 0 %}
-                                      <i class="material-icons">done_all</i>
-                                      {% else %}
-                                      <!-- <i class="material-icons">done</i> -->
+                                    {% if (documento.activo == 'Si') %}
+                                      <tr>
+                                        <td>{{documento.cuil}}</td>
+                                        <td>{{documento.periodoAnio}}/{{documento.periodoMes}}</td>
+                                        <td>
+                                          {% if documento.cantidadVisitas > 0 %}
+                                          <i class="material-icons">done_all</i>
+                                          {% else %}
+                                          <!-- <i class="material-icons">done</i> -->
+                                          {% endif %}
+                                        </td>
+                                        <td>{{documento.archivo}}</td>
+                                        <td>{{documento.descripcion}}</td>
+                                        <td><a href="{{ path('documento_descargar',{'id':documento.id}) }}"><i class="material-icons">picture_as_pdf</i></a></td>
+                                      </tr>
                                       {% endif %}
-                                    </td>
-                                    <td>{{documento.archivo}}</td>
-                                    <td>{{documento.descripcion}}</td>
-                                    <td><a href="{{ path('documento_descargar',{'id':documento.id}) }}"><i class="material-icons">picture_as_pdf</i></a></td>
-                                  </tr>
                                 {% else %}
                                 <tr>
                                   <td colspan="5">No tiene Documento Asociado.</td>

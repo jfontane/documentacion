@@ -124,6 +124,11 @@ class ImportacionController extends Controller {
             $documento->setDescripcion($descripcion);
             $documento->setPeriodoAnio($periAnio);
             $documento->setPeriodoMes($periMes);
+            if ($descripcion == 'RESOLUCIÓN') {
+               $documento->setActivo('Si');
+            } else {
+                $documento->setActivo('No');
+            }
             //BUSCO SI YA EXISTE EL EMAIL
             $perso = $em->getRepository('DocumentacionBundle:Usuario')->findOneBy(array('username' => $email_arreglado));
             //SI NO EXISTE PERSISTO EL USUARIO Y LA VINCULO AL DOCUMENTO

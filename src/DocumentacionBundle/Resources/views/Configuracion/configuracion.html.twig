@@ -11,12 +11,43 @@
                     <p class="warn">{{ mensaje }}</p>
                 {% endfor %}
             </div>
-            <table align='center'>
+            <table align='center' class="table">
               <tr>
-                <th>Lista de Archivos Fisicos sin Vincular a BD. <a href="{{ path('documento_listar_sobrantes') }}" class='btn btn-primary'>Listar</a> </th>
+                <td>
+                   Lista de Archivos Fisicos sin Vincular a BD.&nbsp;&nbsp; <a href="{{ path('documento_listar_sobrantes') }}" class='btn btn-primary'>Listar</a>
+                 </td>
               </tr>
               <tr>
-                <th>Vaciar la Base de Datos. <a href="#" class='btn btn-primary'>Vaciar</a> </th>
+                <th><hr></th>
+              </tr>
+              <tr>
+                <td>Vaciar la Base de Datos.&nbsp;&nbsp; <a id='btn_borrar' href="#" class='btn btn-primary'>Vaciar</a> </td>
+              </tr>
+              <tr>
+                <th><hr></th>
+              </tr>
+              <tr>
+                <td>Activar Todos los documentos. &nbsp;&nbsp;
+                     <a href="{{ path('admin_documentos_activar', {'estado':'Si'}) }}" class='btn btn-warning'>Activar</a>&nbsp;&nbsp;
+                     <a href="{{ path('admin_documentos_activar', {'estado':'No'} ) }}" class='btn btn-warning'>Desactivar</a>
+                </td>
               </tr>
             </table>
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ parent() }}
+            <script>
+                $(document).ready(function () {
+                    $('a[id=btn_borrar]').on('click', function () {
+                        event.preventDefault();
+                        //id = $(this).data("id");
+                        var url = "./vaciar/tablas";
+                        if (confirm('Esta seguro de Vacias las Tablas??')) {
+                            $(location).attr('href', url);
+                        }
+                    });
+                });
+            </script>
+
         {% endblock %}
