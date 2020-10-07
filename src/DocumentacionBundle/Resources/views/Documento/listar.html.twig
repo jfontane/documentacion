@@ -13,8 +13,12 @@
         {# CONTENIDO ORIGINAL DEL ARCHIVO Y SIN LAS ETIQUETAS <html><body> � </body></html> #}
         <h3>Listado de Documentacion</h3>
         <div class="grid_16">
+          <h2>Filtrar resultados</h2>
+          <div>
+              {{ form(form_filtro) }}
+          </div>
           <div class="mt-4">
-              Se encontraron {{ cantidad }} Documento(s).
+              Se encontraron {{ pagination.getTotalItemCount() }} Documento(s).
           </div>
             <table class="table table-bordered">
                 <thead class="thead-dark">
@@ -30,7 +34,7 @@
                 </thead>
                 <tbody>
 
-                {% for documento in documentos %}
+                {% for documento in pagination %}
                                         <tr>
                                             <td>
                                                 {{ documento['id'] }}
@@ -64,6 +68,9 @@
 
                 </tbody>
             </table>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
         </div>
     {% endblock %}
     {% block javascripts %}

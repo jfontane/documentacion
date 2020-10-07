@@ -9,17 +9,37 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\UserInterface;
+use DocumentacionBundle\Form\FiltroDocumentoType;
+use DocumentacionBundle\Services\DocumentosService;
+
+
 
 
 class DocumentoController extends Controller {
 
-    public function listarDocumentosAction(UserInterface $usuario) {
+    public function listarDocumentosAction(UserInterface $usuario,Request $request) {
       if ($usuario->hasRole('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
-            $documentos = $em->getRepository('DocumentacionBundle:Documento')->findAll();
+
+
+            $formFiltro = $this->createForm(FiltroDocumentoType::class, null, array(
+                'method' => 'GET'
+            ));
+            $formFiltro->handleRequest($request);
+            $filtros = array();
+            if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+                $filtros = $formFiltro->getData();
+                //dump($filtros);die;
+            }
+
+            $documentoService = $this->get(DocumentosService::class);
+            $resultado = $documentoService->filtrar($filtros); // ver acaaaaaaaaaaaaaaaa
+            $documentos = $resultado->getResult();
+
             $ARRAY_DOCUMENTOS = array();
             $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
             $cantidad = 0;
+
             foreach ($documentos as $documento) {
                 $ARR_TMP = array();
                 $ARR_TMP['id'] = $documento->getId();
@@ -37,9 +57,17 @@ class DocumentoController extends Controller {
                 }
                 array_push($ARRAY_DOCUMENTOS, $ARR_TMP);
             }
+            $query = $ARRAY_DOCUMENTOS;
+            $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
+            $paginator = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                    $query, $request->query->getInt('page', 1), $items_por_pagina
+            );
+
             return $this->render('@Documentacion\Documento\listar.html.twig', array(
-                                                       'documentos' => $ARRAY_DOCUMENTOS,
-                                                       'cantidad' => $cantidad
+                                                       'pagination' => $pagination,
+                                                       'cantidad' => $cantidad,
+                                                       'form_filtro' => $formFiltro->createView()
                                 ));
         } else {
           AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()

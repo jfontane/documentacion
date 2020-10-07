@@ -38,3 +38,6 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+    DocumentacionBundle\Services\DocumentosService:
+        public: true
+        arguments: ["@doctrine.orm.entity_manager"]

@@ -27,14 +27,12 @@ class Documento
 
   /**
    * @ORM\Column(type="string", length=255)
-   * @Assert\NotBlank
    */
   private $descripcion;
 
 
   /**
    * @ORM\Column(type="string", length=255)
-   * @Assert\NotBlank
    */
   private $periodoAnio;
 
@@ -46,7 +44,6 @@ class Documento
 
   /**
    * @ORM\Column(type="string", length=255)
-   * @Assert\NotBlank
    */
   private $cuil;
 

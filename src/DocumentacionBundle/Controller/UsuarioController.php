@@ -40,7 +40,7 @@ class UsuarioController extends Controller {
             //dump($personas);die;
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
-                    $usuarios, $request->query->getInt('page', 1), 350
+                    $usuarios, $request->query->getInt('page', 1), 25
             );
             return $this->render('@Documentacion\Usuario\listar.html.twig', array(
                         'pagination' => $pagination
