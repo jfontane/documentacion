@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Form\UsuarioType;
 use Symfony\Component\Security\Core\User\UserInterface;
+use DocumentacionBundle\Form\FiltroUsuarioType;
+
 
 class UsuarioController extends Controller {
 
@@ -38,12 +40,27 @@ class UsuarioController extends Controller {
             $usuarios = $em->getRepository('DocumentacionBundle:Usuario')->findAll();
             //$documentos = $persona->getDocumentos();
             //dump($personas);die;
+
+            $formFiltro = $this->createForm(FiltroUsuarioType::class, null, array(
+                'method' => 'GET'
+            ));
+
+            $formFiltro->handleRequest($request);
+            $filtros = array();
+            if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+                $filtros = $formFiltro->getData();
+                //dump($filtros);die;
+            }
+
+
+
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                     $usuarios, $request->query->getInt('page', 1), 25
             );
             return $this->render('@Documentacion\Usuario\listar.html.twig', array(
-                        'pagination' => $pagination
+                        'pagination' => $pagination,
+                        'form_filtro' => $formFiltro->createView()
                             )
             );
         } else if ($user->hasRole('ROLE_USER')) {

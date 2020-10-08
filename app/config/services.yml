@@ -41,3 +41,7 @@ services:
     DocumentacionBundle\Services\DocumentosService:
         public: true
         arguments: ["@doctrine.orm.entity_manager"]
+
+    DocumentacionBundle\Services\UsuariosService:
+        public: true
+        arguments: ["@doctrine.orm.entity_manager"]

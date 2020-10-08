@@ -15,7 +15,7 @@ use function dump;
  *
  * @author esangoi
  */
-class DocumentosService {
+class UsuariosService {
 
     /**
      *
@@ -33,7 +33,7 @@ class DocumentosService {
      *
      * @var string
      */
-    const ALIAS_DOC = 'd';
+    const ALIAS_USU = 'u';
 
 
     public function __construct(EntityManager $em) {
@@ -53,21 +53,21 @@ class DocumentosService {
      */
     public function filtrar($filtros) {
         //Instanciar
-        //dump($filtros);die;
+        dump($filtros);die;
 
 
         $qbLiq = $this->em->createQueryBuilder();
-        $qbLiq->select(array(self::ALIAS_DOC));
-        $qbLiq->from(Documento::class, self::ALIAS_DOC);
-        $qbLiq->orderBy(self::ALIAS_DOC . '.cuil', 'ASC');
-        $qbLiq->addOrderBy(self::ALIAS_DOC . '.descripcion', 'DESC');
+        $qbLiq->select(array(self::ALIAS_USU));
+        $qbLiq->from(Documento::class, self::ALIAS_USU);
+        $qbLiq->orderBy(self::ALIAS_USU . '.cuil', 'ASC');
+        $qbLiq->addOrderBy(self::ALIAS_USU . '.descripcion', 'DESC');
 
         $andX = $qbLiq->expr()->andX(); // expresion AND en vacio
         foreach ($filtros as $filtro => $value) {
             if($value === 0 || null === $value){
                 continue;
             }
-            $prop = self::ALIAS_DOC . '.' . $filtro;
+            $prop = self::ALIAS_USU . '.' . $filtro;
             $param = ':' . $filtro;
             $andX->add($qbLiq->expr()->eq($prop, $param));
 

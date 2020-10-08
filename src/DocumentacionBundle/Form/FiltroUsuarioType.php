@@ -4,16 +4,18 @@ namespace DocumentacionBundle\Form;
 
 use DocumentacionBundle\Entity\Documento;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FiltroDocumentoType extends AbstractType {
+class FiltroUsuarioType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
 
+        $builder->add('usuario', EmailType::class, array('required'=> false));
         $builder->add('cuil', TextType::class, array('required'=> false));
         $builder->add('descripcion', TextType::class, array('required'=> false));
 
@@ -21,7 +23,6 @@ class FiltroDocumentoType extends AbstractType {
         //Periodo año
         $rango = range(2011, date('Y')); // de 2015 al año actual
         //       $periodo_anio = array('No aplicar');
-
         $periodo_anio = array_merge(array(0 => 'No aplicar'), $rango);
 
         //dump($periodo_anio);exit;

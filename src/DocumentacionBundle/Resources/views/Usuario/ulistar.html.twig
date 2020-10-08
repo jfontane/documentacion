@@ -12,27 +12,21 @@
                 <li class="breadcrumb-item active" aria-current="page">Documentos</li>
             </ol>
         </nav>
-        <!-- MENSAJES FLASH ADMIN AQUÍ (utilizar <div class=”flash_admin”> </div>) -->
-        <div class="alert alert-danger" role="alert" >
-            {% for mensaje in app.session.flashbag.get('warn') %}
-                <p class="warn">{{ mensaje }}</p>
-            {% endfor %}
-        </div>
-
+        
         <div class="grid_16">
              {% if usuario  %}
                      <div class="mt-4">
                          Se encontraron {{ cantidad }} Documento(s).
                      </div><br>
-                          <div class="alert alert-primary" role="alert">
-                            <p><b>Usuario:&nbsp;</b>{{ usuario.username }}</p>
-                            <p><b>Roles:&nbsp;</b> {{ usuario.roles[0] }}</p>
-                            <p><b>Fecha que se Registr&oacute;:</b>&nbsp;
+                          <div class="alert alert-warning" role="alert">
+                          <font color='black'>  <p><b>Usuario:&nbsp;</b>{{ usuario.username }}</p> </font>
+                          <font color='black'>    <p><b>Roles:&nbsp;</b> {{ usuario.roles[0] }}</p> </font>
+                          <font color='black'>  <p><b>Fecha que se Registr&oacute;:</b>&nbsp; </font>
 
                                 {% if usuario.fechaRegistracion == NULL %}
-                                       NO se ha Registrado.
+                                       <font color='red'>NO se ha Registrado.</font>
                                 {% else %}
-                                       {{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }}
+                                       <font color='black'>{{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }}</font>
                                 {% endif %}
 
                               </p>
@@ -51,23 +45,23 @@
                                   {% for documento in usuario.documentos %}
                                     {% if (documento.activo == 'Si') %}
                                       <tr>
-                                        <td>{{documento.cuil}}</td>
-                                        <td>{{documento.periodoAnio}}/{{documento.periodoMes}}</td>
+                                        <td><font color='black'>{{documento.cuil}}</font></td>
+                                        <td><font color='black'>{{documento.periodoAnio}}/{{documento.periodoMes}}</font></td>
                                         <td>
                                           {% if documento.cantidadVisitas > 0 %}
-                                          <i class="material-icons">done_all</i>
+                                          <font color='black'><i class="material-icons">done_all</i></font>
                                           {% else %}
                                           <!-- <i class="material-icons">done</i> -->
                                           {% endif %}
                                         </td>
-                                        <td>{{documento.archivo}}</td>
-                                        <td>{{documento.descripcion}}</td>
+                                        <td><font color='black'>{{documento.archivo}}</font></td>
+                                        <td><font color='black'>{{documento.descripcion}}</font></td>
                                         <td><a href="{{ path('documento_descargar',{'id':documento.id}) }}"><i class="material-icons">picture_as_pdf</i></a></td>
                                       </tr>
                                       {% endif %}
                                 {% else %}
                                 <tr>
-                                  <td colspan="5">No tiene Documento Asociado.</td>
+                                  <td colspan="5"><font color='black'>No tiene Documento Asociado.</font></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -75,7 +69,7 @@
                               </div>
 
                     {% else %}
-                      No existe ninguna Usuario.
+                      <font color='black'>No existe ninguna Usuario.</font>
                     {% endif %}
         </div>
 
