@@ -4,6 +4,7 @@ namespace DocumentacionBundle\Services;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
+use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Entity\Documento;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -34,6 +35,7 @@ class UsuariosService {
      * @var string
      */
     const ALIAS_USU = 'u';
+    const ALIAS_DOC = 'd';
 
 
     public function __construct(EntityManager $em) {
@@ -53,14 +55,16 @@ class UsuariosService {
      */
     public function filtrar($filtros) {
         //Instanciar
-        dump($filtros);die;
+        //dump($filtros);die;
 
 
         $qbLiq = $this->em->createQueryBuilder();
         $qbLiq->select(array(self::ALIAS_USU));
-        $qbLiq->from(Documento::class, self::ALIAS_USU);
-        $qbLiq->orderBy(self::ALIAS_USU . '.cuil', 'ASC');
-        $qbLiq->addOrderBy(self::ALIAS_USU . '.descripcion', 'DESC');
+        $qbLiq->from(Usuario::class, self::ALIAS_USU);
+        $qbLiq->innerJoin(Documento::class, self::ALIAS_DOC, Join::WITH,
+                self::ALIAS_USU . '.id = ' . self::ALIAS_DOC . '.id');
+        $qbLiq->orderBy(self::ALIAS_USU . '.username', 'ASC');
+        //$qbLiq->addOrderBy(self::ALIAS_USU . '.descripcion', 'DESC');
 
         $andX = $qbLiq->expr()->andX(); // expresion AND en vacio
         foreach ($filtros as $filtro => $value) {

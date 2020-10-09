@@ -3,6 +3,7 @@
 namespace DocumentacionBundle\Form;
 
 use DocumentacionBundle\Entity\Documento;
+use DocumentacionBundle\Entity\Usuario;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

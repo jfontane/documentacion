@@ -5,10 +5,10 @@ namespace DocumentacionBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Form\UsuarioType;
 use Symfony\Component\Security\Core\User\UserInterface;
 use DocumentacionBundle\Form\FiltroUsuarioType;
+use DocumentacionBundle\Services\UsuariosService;
 
 
 class UsuarioController extends Controller {
@@ -37,7 +37,7 @@ class UsuarioController extends Controller {
         $user = $this->getUser();
         if ($user->hasRole('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getManager();
-            $usuarios = $em->getRepository('DocumentacionBundle:Usuario')->findAll();
+            //$usuarios = $em->getRepository('DocumentacionBundle:Usuario')->findAll();
             //$documentos = $persona->getDocumentos();
             //dump($personas);die;
 
@@ -47,11 +47,15 @@ class UsuarioController extends Controller {
 
             $formFiltro->handleRequest($request);
             $filtros = array();
-            if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+            if ($formFiltro->isSubmitted()) {
                 $filtros = $formFiltro->getData();
                 //dump($filtros);die;
             }
 
+            //dump($filtros);die;
+            $usuarioService = $this->get(UsuariosService::class);
+            $resultado = $usuarioService->filtrar($filtros);
+            $usuarios = $resultado->getResult();
 
 
             $paginator = $this->get('knp_paginator');
