@@ -39,22 +39,25 @@
           <div class="mt-4">
               Se encontraron {{ pagination.getTotalItemCount() }} Documento(s).
           </div>
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Cuil</th>
-                        <th>Archivo</th>
-                        <th>Arch.Fisico</th>
-                        <th>Periodo</th>
-                        <th>Descripcion</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
+
 
                 {% for documento in pagination %}
+                  <div class="alert alert-light" role="alert">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cuil</th>
+                            <th width=70%>Archivo</th>
+                            <th>Arch.Fisico</th>
+                            <th>Periodo</th>
+                            <th>Descripcion</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                                         <tr>
+
                                             <td>
                                                 {{ documento['id'] }}
                                             </td>
@@ -77,17 +80,30 @@
                                                 <a href=""><i class="material-icons">delete</i></a>&nbsp;&nbsp;
                                             </td>
                                         </tr>
+                                      </div>
+                                      <tr>
+                                         <td  colspan="7">
+                                           {% for usuario in documento['usuarios'] %}
+                                                  {{usuario.username}} <a href=""><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            {% else %}
+                                               No Tiene usuario vinculado.
+                                            {% endfor %}
+                                          </td>
+                                        </tr>
+                                          </tbody>
+                                      </table>
+                                    </div>
                                     {% else %}
                                         <tr>
                                             <td colspan="7">No existe ningun Documento</td>
                                         </tr>
-                                    {% endfor %}
-                </tbody>
-            </table>
+                                      </tbody>
+                                  </table>
+                            {% endfor %}
+
             <div class="navigation">
                 {{ knp_pagination_render(pagination) }}
             </div>
-        </div>
     {% endblock %}
     {% block javascripts %}
         <script>
@@ -96,5 +112,12 @@
                     //location.href
                 }
             }
+
+        $(document).ready(function () {
+            $("#btn_quitar_filtro").click(function () {
+                $(location).attr('href', "{{ path('usuarios_listar') }}");
+
+            })
+          })
         </script>
     {% endblock %}

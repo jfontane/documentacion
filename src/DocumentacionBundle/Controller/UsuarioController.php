@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use DocumentacionBundle\Form\FiltroUsuarioType;
 use DocumentacionBundle\Services\UsuariosService;
 
-
 class UsuarioController extends Controller {
 
    public function crearAdminAction($email, $autorizacion) {

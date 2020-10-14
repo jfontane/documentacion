@@ -24,22 +24,15 @@
                       <legend><h3>Filtrar resultados</h3> </legend>
                             <table>
                             <tr>
-                                <th><font color='black'>{{ form_label(form_filtro.usuario) }}</font></th><th>&nbsp;{{ form_widget(form_filtro.usuario) }}</th><th>{{ form_errors(form_filtro.usuario) }}</th>
+                                <th><font color='black'>{{ form_label(form_filtro.username) }}</font></th>
+                                <th>&nbsp;{{ form_widget(form_filtro.username) }}</th>
+                                <th>{{ form_errors(form_filtro.username) }}</th>
                             </tr>
                             <tr>
-                                <th><font color='black'>{{ form_label(form_filtro.cuil) }}</font></th><th>&nbsp;{{ form_widget(form_filtro.cuil) }}</th><th>{{ form_errors(form_filtro.cuil) }}</th>
+                              <th colspan="3"></th>
                             </tr>
                             <tr>
-                                <th><font color='black'>{{ form_label(form_filtro.descripcion) }}</font></th><th>&nbsp;{{ form_widget(form_filtro.descripcion) }}</th><th>{{ form_errors(form_filtro.descripcion) }}</th>
-                            </tr>
-                            <tr>
-                              <th><font color='black'>{{ form_label(form_filtro.periodoAnio) }}</font></th><th>&nbsp;{{ form_widget(form_filtro.periodoAnio) }}</th><th>{{ form_errors(form_filtro.periodoAnio) }}</th>
-                            </tr>
-                            <tr>
-                              <th><font color='black'>{{ form_label(form_filtro.periodoMes) }}</font></th><th>&nbsp;{{ form_widget(form_filtro.periodoMes) }}</th><th>{{ form_errors(form_filtro.periodoMes) }}</th>
-                            </tr>
-                            <tr>
-                              <th colspan="3">{{ form_widget(form_filtro.submit) }}</th></th>
+                              <th colspan="3">{{ form_widget(form_filtro.submit) }}&nbsp;&nbsp;&nbsp; <input type="button" class="btn btn-secondary" id="btn_quitar_filtro" value="Quitar Filtro"></th>
                             </tr>
                             </table>
                       </fieldset>
@@ -115,6 +108,7 @@
     {{ parent() }}
     <script>
         $(document).ready(function () {
+
             $('a[id=btn_borrar]').on('click', function () {
                 event.preventDefault();
                 url = $(this).attr('href');
@@ -122,6 +116,14 @@
                     $(location).attr('href', url);
                 }
             });
+
+            $("#btn_quitar_filtro").click(function () {
+                $(location).attr('href', "{{ path('usuarios_listar') }}");
+
+            })
+
+
+
         });
     </script>
     {% endblock %}

@@ -35,8 +35,6 @@ class UsuariosService {
      * @var string
      */
     const ALIAS_USU = 'u';
-    const ALIAS_DOC = 'd';
-
 
     public function __construct(EntityManager $em) {
         $this->em = $em;
@@ -56,13 +54,9 @@ class UsuariosService {
     public function filtrar($filtros) {
         //Instanciar
         //dump($filtros);die;
-
-
         $qbLiq = $this->em->createQueryBuilder();
         $qbLiq->select(array(self::ALIAS_USU));
         $qbLiq->from(Usuario::class, self::ALIAS_USU);
-        $qbLiq->innerJoin(Documento::class, self::ALIAS_DOC, Join::WITH,
-                self::ALIAS_USU . '.id = ' . self::ALIAS_DOC . '.id');
         $qbLiq->orderBy(self::ALIAS_USU . '.username', 'ASC');
         //$qbLiq->addOrderBy(self::ALIAS_USU . '.descripcion', 'DESC');
 

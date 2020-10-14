@@ -13,8 +13,6 @@ use DocumentacionBundle\Form\FiltroDocumentoType;
 use DocumentacionBundle\Services\DocumentosService;
 
 
-
-
 class DocumentoController extends Controller {
 
     public function listarDocumentosAction(UserInterface $usuario,Request $request) {
@@ -27,7 +25,7 @@ class DocumentoController extends Controller {
             ));
             $formFiltro->handleRequest($request);
             $filtros = array();
-            if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
+          if ($formFiltro->isSubmitted() /* && $formFiltro->isValid() */) {
                 $filtros = $formFiltro->getData();
                 //dump($filtros);die;
             }
@@ -40,7 +38,10 @@ class DocumentoController extends Controller {
             $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
             $cantidad = 0;
 
+
+
             foreach ($documentos as $documento) {
+              //dump($documento->getUsuarios());die;
                 $ARR_TMP = array();
                 $ARR_TMP['id'] = $documento->getId();
                 $ARR_TMP['cuil'] = $documento->getCuil();
@@ -49,6 +50,7 @@ class DocumentoController extends Controller {
                 $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
                 $ARR_TMP['descripcion'] = $documento->getDescripcion();
                 $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
+                $ARR_TMP['usuarios'] = $documento->getUsuarios();
                 $cantidad++;
                 if ($this->existeArchivo($documento->getArchivo(), $archivos)) {
                     $ARR_TMP['archivoFisico'] = 'Si';
