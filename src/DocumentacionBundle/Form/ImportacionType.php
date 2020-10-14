@@ -31,7 +31,7 @@ class ImportacionType extends AbstractType {
       //else $tam_final = $tam_max_upload_post;
 
         $builder->add('nombre', ChoiceType::class, array(
-                    'choices' => array('Beneficios' => 'Beneficios')))
+                    'choices' => array('Beneficios' => 'Beneficios', 'Pasivos' => 'Pasivos', 'Tramites' => 'Tramites' )))
                 ->add('archivo', FileType::class,array(
                      'label' => "Archivo",
                      'mapped' => false,

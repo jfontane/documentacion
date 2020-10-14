@@ -15,6 +15,9 @@ use DocumentacionBundle\Form\ImportacionType;
 use DocumentacionBundle\Entity\Importacion;
 use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Entity\Documento;
+use DocumentacionBundle\Entity\PersonalPasivo;
+use DocumentacionBundle\Entity\PersonalTramite;
+use Symfony\Component\Validator\Constraints\Date;
 
 class ImportacionController extends Controller {
 
@@ -24,7 +27,7 @@ class ImportacionController extends Controller {
         $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-                $importaciones, $request->query->getInt('page', 1), 2
+                $importaciones, $request->query->getInt('page', 1), 15
         );
         return $this->render('@Documentacion/Importacion/listar.html.twig', array(
                     'pagination' => $pagination,
@@ -99,6 +102,12 @@ class ImportacionController extends Controller {
                 $em->persist($importacion);
                 $em->flush();
                 AbstractBaseController::addWarnMessage('La importacion de Beneficios se ha PROCESADO con Exito.');
+            } else if ($tipo_importacion == 'Pasivos') {
+                $this->procesarArchivoPasivos($fileName, $periodoAnio, $periodoMes);
+                $importacion->setProcesado('Si');
+                $em->persist($importacion);
+                $em->flush();
+                AbstractBaseController::addWarnMessage('La importacion de Constancias de Beneficios se ha PROCESADO con Exito.');
             }
         } else
             AbstractBaseController::addWarnMessage('No se ha realizado ninguna importacion con Exito.');
@@ -147,6 +156,46 @@ class ImportacionController extends Controller {
             };
             $em->persist($documento);
             $em->flush();
+        }; // END FOR
+    }
+
+
+
+    private function procesarArchivoPasivos($fileName, $periAnio, $periMes) {
+        $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
+        $lineas = count($archivo);
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $c = 0;
+        for ($i = 0; $i < $lineas; $i++) {
+            //$personalPasivo = new PersonalPasivo();
+            $cuil = explode(',', $archivo[$i])[0];
+            $clase = explode(',', $archivo[$i])[1];
+            $numero = explode(',', $archivo[$i])[2];
+            $digito = explode(',', $archivo[$i])[3];
+            $sexo = explode(',', $archivo[$i])[6];
+            $apellidoPaterno = explode(',', $archivo[$i])[7];
+            $apellidoMaterno = explode(',', $archivo[$i])[8];
+            $nombres = explode(',', $archivo[$i])[9];
+            $fechaInclusion = explode(',', $archivo[$i])[10];
+            $fechaInclusionCorregida = new \Datetime(substr($fechaInclusion,0,4).'-'.substr($fechaInclusion,4,2).'-'.substr($fechaInclusion,6,2));
+            //die($cuil.'-'.$clase.'-'.$numero.'-'.$digito.'-'.$sexo.'-'.$apellidoPaterno.'-'.$apellidoMaterno.'-'.$nombres.'-'.$fechaInclusionCorregida);
+            /*$personalPasivo->setCuip($cuil);
+            $personalPasivo->setClase($clase);
+            $personalPasivo->setNumero($numero);
+            $personalPasivo->setDigito($digito);
+            $personalPasivo->setSexo($sexo);
+            $personalPasivo->setApellidoPaterno($apellidoPaterno);
+            $personalPasivo->setApellidoMaterno($apellidoMaterno);
+            $personalPasivo->setNombres($nombres);
+            $personalPasivo->setInclusion($fechaInclusionCorregida);*/
+            //ARMO LA SQL
+            $query = "INSERT INTO personal_pasivo (cuip, clase, numero, digito, sexo, apellido_paterno, apellido_materno, nombres, inclusion)
+                      VALUES ('$cuil', '$clase', '$numero', '$digito', '$sexo', '$apellidoPaterno', '$apellidoMaterno', '$nombres', '$fechaInclusionCorregida')";
+
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
         }; // END FOR
     }
 

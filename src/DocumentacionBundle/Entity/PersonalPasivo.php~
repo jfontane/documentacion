@@ -1,0 +1,77 @@
+<?php
+
+namespace DocumentacionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * PersonalPasivo
+ *
+ * @ORM\Entity
+ */
+class PersonalPasivo
+{
+  /**
+   * @ORM\Id
+   * @ORM\Column(type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  private $id;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $cuip;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $clase;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $numero;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $digito;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $sexo;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $apellidoPaterno;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $apellidoMaterno;
+
+  /**
+   * @ORM\Column(type="string", length=255)
+   * @Assert\NotBlank
+   */
+  private $nombres;
+
+  /**
+   * @ORM\Column(type="date")
+   * @Assert\NotBlank
+   */
+  private $inclusion;
+
+
+}

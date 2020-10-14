@@ -21,7 +21,7 @@ class Importacion {
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, columnDefinition="enum('Beneficios')")
+     * @ORM\Column(type="string", length=255, columnDefinition="enum('Beneficios','Pasivos','Tramites')")
      * @Assert\NotBlank
      */
     private $nombre;
