@@ -17,7 +17,6 @@ use DocumentacionBundle\Entity\Usuario;
 use DocumentacionBundle\Entity\Documento;
 use DocumentacionBundle\Entity\PersonalPasivo;
 use DocumentacionBundle\Entity\PersonalTramite;
-use Symfony\Component\Validator\Constraints\Date;
 
 class ImportacionController extends Controller {
 
@@ -101,13 +100,19 @@ class ImportacionController extends Controller {
                 $importacion->setProcesado('Si');
                 $em->persist($importacion);
                 $em->flush();
-                AbstractBaseController::addWarnMessage('La importacion de Beneficios se ha PROCESADO con Exito.');
+                AbstractBaseController::addWarnMessage('La importacion de Inclusion de Beneficios se ha PROCESADO con Exito.');
             } else if ($tipo_importacion == 'Pasivos') {
                 $this->procesarArchivoPasivos($fileName, $periodoAnio, $periodoMes);
                 $importacion->setProcesado('Si');
                 $em->persist($importacion);
                 $em->flush();
                 AbstractBaseController::addWarnMessage('La importacion de Constancias de Beneficios se ha PROCESADO con Exito.');
+            } else if ($tipo_importacion == 'Tramites') {
+                $this->procesarArchivoTramites($fileName, $periodoAnio, $periodoMes);
+                $importacion->setProcesado('Si');
+                $em->persist($importacion);
+                $em->flush();
+                AbstractBaseController::addWarnMessage('La importacion de Tramites Iniciados se ha PROCESADO con Exito.');
             }
         } else
             AbstractBaseController::addWarnMessage('No se ha realizado ninguna importacion con Exito.');
@@ -161,42 +166,75 @@ class ImportacionController extends Controller {
 
 
 
+    private function limpiar_metas($string)
+    {
+      $string = htmlentities($string);
+      $string = preg_replace('/\&(.)[^;]*;/', '\\1', $string);
+      return $string;
+    }
+
     private function procesarArchivoPasivos($fileName, $periAnio, $periMes) {
         $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $lineas = count($archivo);
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-        $c = 0;
+        $c = 0;$values = "";$query = "";
         for ($i = 0; $i < $lineas; $i++) {
-            //$personalPasivo = new PersonalPasivo();
+            $c++;
             $cuil = explode(',', $archivo[$i])[0];
             $clase = explode(',', $archivo[$i])[1];
             $numero = explode(',', $archivo[$i])[2];
             $digito = explode(',', $archivo[$i])[3];
             $sexo = explode(',', $archivo[$i])[6];
-            $apellidoPaterno = explode(',', $archivo[$i])[7];
-            $apellidoMaterno = explode(',', $archivo[$i])[8];
-            $nombres = explode(',', $archivo[$i])[9];
+            $apellidoPaterno = str_replace("'","\\'",explode(',', $archivo[$i])[7]);
+            $apellidoMaterno = str_replace("'","\\'",explode(',', $archivo[$i])[8]);
+            $nombres = str_replace("'","\\'",explode(',', $archivo[$i])[9]);
             $fechaInclusion = explode(',', $archivo[$i])[10];
-            $fechaInclusionCorregida = new \Datetime(substr($fechaInclusion,0,4).'-'.substr($fechaInclusion,4,2).'-'.substr($fechaInclusion,6,2));
-            //die($cuil.'-'.$clase.'-'.$numero.'-'.$digito.'-'.$sexo.'-'.$apellidoPaterno.'-'.$apellidoMaterno.'-'.$nombres.'-'.$fechaInclusionCorregida);
-            /*$personalPasivo->setCuip($cuil);
-            $personalPasivo->setClase($clase);
-            $personalPasivo->setNumero($numero);
-            $personalPasivo->setDigito($digito);
-            $personalPasivo->setSexo($sexo);
-            $personalPasivo->setApellidoPaterno($apellidoPaterno);
-            $personalPasivo->setApellidoMaterno($apellidoMaterno);
-            $personalPasivo->setNombres($nombres);
-            $personalPasivo->setInclusion($fechaInclusionCorregida);*/
-            //ARMO LA SQL
-            $query = "INSERT INTO personal_pasivo (cuip, clase, numero, digito, sexo, apellido_paterno, apellido_materno, nombres, inclusion)
-                      VALUES ('$cuil', '$clase', '$numero', '$digito', '$sexo', '$apellidoPaterno', '$apellidoMaterno', '$nombres', '$fechaInclusionCorregida')";
-
-            $stmt = $db->prepare($query);
-            $params = array();
-            $stmt->execute($params);
+            $fechaInclusionCorregida = substr($fechaInclusion,0,4).'-'.substr($fechaInclusion,4,2).'-'.substr($fechaInclusion,6,2);
+            $values .= "('$cuil', '$clase', '$numero', '$digito', '$sexo', '$apellidoPaterno', '$apellidoMaterno', '$nombres', '$fechaInclusionCorregida'),";
+            $query = "";
+            if ($c==500 or $i==$lineas-1) {
+               $values = substr($values,0,strlen($values)-1);
+               $query = "INSERT INTO personal_pasivo (cuip, clase, numero, digito, sexo, apellido_paterno, apellido_materno, nombres, inclusion) values ".$values;
+               $c=0;
+               $stmt = $db->prepare($query);
+               $stmt->execute();
+               $values = "";$query = "";
+            }
         }; // END FOR
+    }
+
+    private function procesarArchivoTramites($fileName, $periAnio, $periMes) {
+        $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
+        $lineas = count($archivo);
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $c = 0;$values = "";$query = "";
+        for ($i = 0; $i < $lineas; $i++) {
+            $c++;
+            $cuil = explode(',', $archivo[$i])[0];
+            $expediente = explode(',', $archivo[$i])[1];
+            $sexo = explode(',', $archivo[$i])[4];
+            $apellidoPaterno = str_replace("'","\\'",explode(',', $archivo[$i])[5]);
+            $apellidoMaterno = str_replace("'","\\'",explode(',', $archivo[$i])[6]);
+            $nombres = str_replace("'","\\'",explode(',', $archivo[$i])[7]);
+            $tipoBeneficio = str_replace("'","\\'",explode(',', $archivo[$i])[8]);
+            $values .= "('$cuil', '$expediente', '$sexo', '$apellidoPaterno', '$apellidoMaterno', '$nombres', '$tipoBeneficio'),";
+            $query = "";
+
+            if ($c==500 or $i==$lineas-1) {
+               $values = substr($values,0,strlen($values)-1);
+               $query = "INSERT INTO personal_tramite (cuip, numero_expediente, sexo, apellido_paterno, apellido_materno, nombres, tipo_beneficio) values ".$values;
+               $c=0;
+               $stmt = $db->prepare($query);
+               $stmt->execute();
+               $values = "";$query = "";
+
+
+            }
+
+        }; // END FOR
+
     }
 
 }

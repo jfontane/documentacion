@@ -25,7 +25,7 @@ class DocumentoController extends Controller {
             ));
             $formFiltro->handleRequest($request);
             $filtros = array();
-          if ($formFiltro->isSubmitted() /* && $formFiltro->isValid() */) {
+          if ($formFiltro->isSubmitted()  && $formFiltro->isValid()) {
                 $filtros = $formFiltro->getData();
                 //dump($filtros);die;
             }

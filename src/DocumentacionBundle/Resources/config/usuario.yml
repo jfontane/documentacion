@@ -21,3 +21,9 @@ admin_usuario_eliminar:
     defaults: { _controller: DocumentacionBundle:Usuario:eliminar }
     requirements:
         id: \d+
+
+admin_usuario_desvincular:
+    path:     /desvincular/{id}
+    defaults: { _controller: DocumentacionBundle:Usuario:desvincular }
+    requirements:
+        id: \d+

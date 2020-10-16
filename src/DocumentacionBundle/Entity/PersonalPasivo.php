@@ -38,13 +38,13 @@ class PersonalPasivo
   private $numero;
 
   /**
-   * @ORM\Column(type="string", length=255)
+   * @ORM\Column(type="string", length=1)
    * @Assert\NotBlank
    */
   private $digito;
 
   /**
-   * @ORM\Column(type="string", length=255)
+   * @ORM\Column(type="string", length=1)
    * @Assert\NotBlank
    */
   private $sexo;
@@ -68,7 +68,7 @@ class PersonalPasivo
   private $nombres;
 
   /**
-   * @ORM\Column(type="datetime")
+   * @ORM\Column(type="date")
    */
   private $inclusion;
 
@@ -298,5 +298,53 @@ class PersonalPasivo
     public function getInclusion()
     {
         return $this->inclusion;
+    }
+
+    /**
+     * Set documentoTipo
+     *
+     * @param string $documentoTipo
+     *
+     * @return PersonalPasivo
+     */
+    public function setDocumentoTipo($documentoTipo)
+    {
+        $this->documentoTipo = $documentoTipo;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoTipo
+     *
+     * @return string
+     */
+    public function getDocumentoTipo()
+    {
+        return $this->documentoTipo;
+    }
+
+    /**
+     * Set documentoNumero
+     *
+     * @param string $documentoNumero
+     *
+     * @return PersonalPasivo
+     */
+    public function setDocumentoNumero($documentoNumero)
+    {
+        $this->documentoNumero = $documentoNumero;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoNumero
+     *
+     * @return string
+     */
+    public function getDocumentoNumero()
+    {
+        return $this->documentoNumero;
     }
 }

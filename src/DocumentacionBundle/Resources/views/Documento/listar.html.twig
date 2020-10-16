@@ -35,6 +35,7 @@
                     </tr>
                     </table>
               </fieldset>
+            {{ form_end(form_filtro) }}
           </div>
           <div class="mt-4">
               Se encontraron {{ pagination.getTotalItemCount() }} Documento(s).
@@ -84,7 +85,7 @@
                                       <tr>
                                          <td  colspan="7">
                                            {% for usuario in documento['usuarios'] %}
-                                                  {{usuario.username}} <a href=""><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  {{usuario.username}} <a id='btn_borrar'  href="{#{ path('admin_usuario_desvincular', {'id': usuario.id }) }#}"><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {% else %}
                                                No Tiene usuario vinculado.
                                             {% endfor %}
@@ -105,19 +106,25 @@
                 {{ knp_pagination_render(pagination) }}
             </div>
     {% endblock %}
+
     {% block javascripts %}
-        <script>
-            function confirmaBorrar() {
-                if (confirm("Desea Eliminar un Evento???")) {
-                    //location.href
-                }
-            }
+     {{ parent() }}
 
-        $(document).ready(function () {
-            $("#btn_quitar_filtro").click(function () {
-                $(location).attr('href', "{{ path('usuarios_listar') }}");
+    <script>
 
-            })
+          $(document).ready(function () {
+                $('a[id=btn_borrar]').on('click', function () {
+                    event.preventDefault();
+                    url = $(this).attr('href');
+                    if (confirm('Esta seguro de Eliminar el Vinculo del Usuario para éste Documento??')) {
+                        //$(location).attr('href', url);
+                    }
+                });
+
+               $("#btn_quitar_filtro").click(function () {
+                      $(location).attr('href', "{{ path('usuarios_listar') }}");
+
+                  })
           })
         </script>
     {% endblock %}

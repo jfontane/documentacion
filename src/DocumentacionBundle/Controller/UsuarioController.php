@@ -46,7 +46,7 @@ class UsuarioController extends Controller {
 
             $formFiltro->handleRequest($request);
             $filtros = array();
-            if ($formFiltro->isSubmitted()) {
+            if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
                 $filtros = $formFiltro->getData();
                 //dump($filtros);die;
             }
@@ -128,6 +128,27 @@ class UsuarioController extends Controller {
     }
 
     public function eliminarAction($id, UserInterface $usuario) {
+        if ($usuario->hasRole('ROLE_ADMIN')) {
+                $em = $this->getDoctrine()->getManager();
+                $usuario_para_eliminar = $em->getRepository('DocumentacionBundle:Usuario')->findOneById($id);
+                if (NULL != $usuario_para_eliminar) {
+                    $nombre_usuario_eliminado = $usuario_para_eliminar->getUsername();
+                    $em->remove($usuario_para_eliminar);
+                    $em->flush();
+                    AbstractBaseController::addWarnMessage('Atencion: El Usuario '.$nombre_usuario_eliminado.' se ha Eliminado correctamente.');
+                    return $this->redirect($this->generateUrl('usuarios_listar'));
+                } else {
+                    AbstractBaseController::addWarnMessage('Atencion: El Usuario NO SE ENCUENTRA.');
+                    return $this->redirect($this->generateUrl('usuarios_listar'));
+                }
+        }  else {
+          AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                  . '" no puede realizar esta operacion.');
+          return $this->render('@Documentacion\Default\error.html.twig');
+        }
+    }
+
+    public function desvincularAction($id, UserInterface $usuario) {
         if ($usuario->hasRole('ROLE_ADMIN')) {
                 $em = $this->getDoctrine()->getManager();
                 $usuario_para_eliminar = $em->getRepository('DocumentacionBundle:Usuario')->findOneById($id);
