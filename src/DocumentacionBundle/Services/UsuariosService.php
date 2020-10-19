@@ -5,6 +5,7 @@ namespace DocumentacionBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use DocumentacionBundle\Entity\Usuario;
+use DocumentacionBundle\Entity\UsuarioDocumento;
 use DocumentacionBundle\Entity\Documento;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -35,6 +36,8 @@ class UsuariosService {
      * @var string
      */
     const ALIAS_USU = 'u';
+    const ALIAS_DOCU_USU = 'du';
+
 
     public function __construct(EntityManager $em) {
         $this->em = $em;
@@ -57,7 +60,14 @@ class UsuariosService {
         $qbLiq = $this->em->createQueryBuilder();
         $qbLiq->select(array(self::ALIAS_USU));
         $qbLiq->from(Usuario::class, self::ALIAS_USU);
-        $qbLiq->orderBy(self::ALIAS_USU . '.username', 'ASC');
+        $qbLiq->innerJoin(UsuarioDocumento::class, self::ALIAS_DOCU_USU, Join::WITH,
+                          self::ALIAS_USU . '.id = ' . self::ALIAS_DOCU_USU . '.usuario');
+
+
+
+
+
+        //$qbLiq->orderBy(self::ALIAS_USU . '.username', 'ASC');
         //$qbLiq->addOrderBy(self::ALIAS_USU . '.descripcion', 'DESC');
 
         $andX = $qbLiq->expr()->andX(); // expresion AND en vacio

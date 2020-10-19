@@ -58,17 +58,16 @@ class Documento
   private $activo;
 
   /**
-   * Many Documentos have Many Usuarios.
-   * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="documentos")
-   * @ORM\JoinTable(name="documentos_usuarios")
+   * @ORM\OneToMany(targetEntity="UsuarioDocumento", mappedBy="documento")
    */
-  private $usuarios;
+  private $documentos;
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->usuarios = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->documentos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -226,40 +225,6 @@ class Documento
     }
 
     /**
-     * Add usuario
-     *
-     * @param \DocumentacionBundle\Entity\Usuario $usuario
-     *
-     * @return Documento
-     */
-    public function addUsuario(\DocumentacionBundle\Entity\Usuario $usuario)
-    {
-        $this->usuarios[] = $usuario;
-
-        return $this;
-    }
-
-    /**
-     * Remove usuario
-     *
-     * @param \DocumentacionBundle\Entity\Usuario $usuario
-     */
-    public function removeUsuario(\DocumentacionBundle\Entity\Usuario $usuario)
-    {
-        $this->usuarios->removeElement($usuario);
-    }
-
-    /**
-     * Get usuarios
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsuarios()
-    {
-        return $this->usuarios;
-    }
-
-    /**
      * Set activo
      *
      * @param string $activo
@@ -281,5 +246,39 @@ class Documento
     public function getActivo()
     {
         return $this->activo;
+    }
+
+    /**
+     * Add documento
+     *
+     * @param \DocumentacionBundle\Entity\UsuarioDocumento $documento
+     *
+     * @return Documento
+     */
+    public function addDocumento(\DocumentacionBundle\Entity\UsuarioDocumento $documento)
+    {
+        $this->documentos[] = $documento;
+
+        return $this;
+    }
+
+    /**
+     * Remove documento
+     *
+     * @param \DocumentacionBundle\Entity\UsuarioDocumento $documento
+     */
+    public function removeDocumento(\DocumentacionBundle\Entity\UsuarioDocumento $documento)
+    {
+        $this->documentos->removeElement($documento);
+    }
+
+    /**
+     * Get documentos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocumentos()
+    {
+        return $this->documentos;
     }
 }

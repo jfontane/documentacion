@@ -57,7 +57,7 @@ class Usuario implements UserInterface, \Serializable {
 
     /**
      * Many Personas have Many Documentos.
-     * @ORM\ManyToMany(targetEntity="Documento", mappedBy="usuarios")
+     * @ORM\OneToMany(targetEntity="UsuarioDocumento", mappedBy="usuario")
      */
     private $documentos;
 

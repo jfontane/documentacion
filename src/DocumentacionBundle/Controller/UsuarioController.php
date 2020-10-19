@@ -9,10 +9,12 @@ use DocumentacionBundle\Form\UsuarioType;
 use Symfony\Component\Security\Core\User\UserInterface;
 use DocumentacionBundle\Form\FiltroUsuarioType;
 use DocumentacionBundle\Services\UsuariosService;
+use DocumentacionBundle\Entity\Usuario;
 
 class UsuarioController extends Controller {
 
    public function crearAdminAction($email, $autorizacion) {
+      //  usuario/crear/{email}/{autorizacion}
         if ($autorizacion == '1q2w3e4r5t') {
             $em = $this->getDoctrine()->getManager();
             $passwordEncoder = $this->get('security.password_encoder');
@@ -48,7 +50,7 @@ class UsuarioController extends Controller {
             $filtros = array();
             if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
                 $filtros = $formFiltro->getData();
-                //dump($filtros);die;
+                dump($filtros);die;
             }
 
             //dump($filtros);die;

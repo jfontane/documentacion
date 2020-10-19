@@ -2,6 +2,7 @@
 
 namespace DocumentacionBundle\Controller;
 
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\UserInterface;
 use DocumentacionBundle\Form\FiltroDocumentoType;
 use DocumentacionBundle\Services\DocumentosService;
-
+use DocumentacionBundle\Entity\UsuarioDocumento;
 
 class DocumentoController extends Controller {
 
@@ -79,6 +80,7 @@ class DocumentoController extends Controller {
     }
 
     public function descargarAction($id) {
+        $visita = new Visita;
         $em = $this->getDoctrine()->getManager();
         $documento = $em->getRepository('DocumentacionBundle:Documento')->find($id);
         $fileName = utf8_decode($documento->getArchivo());
@@ -92,9 +94,18 @@ class DocumentoController extends Controller {
         if ($response != NULL) {
             $user = $this->getUser();
             if ($user->hasRole('ROLE_USER')) {
-                $documento->setCantidadVisitas($documento->getCantidadVisitas() + 1);
-                $em->persist($documento);
+                //$documento->setCantidadVisitas($documento->getCantidadVisitas() + 1);
+                if ($visita->getCantidadVisitas() !== null ) {
+                   $visita->setCantidadVisitas(0);
+                } else {
+                  $visita->setCantidadVisitas($visita->getCantidadVisitas() + 1);
+                }
+                $visita->setUsuario($user);
+                $visita->setDocumento($documento);
+                $visita->setFechaUltimaVisita(new \DateTime('now'));
+                $em->persist($visita);
                 $em->flush();
+
             }
         };
         return $response;

@@ -14,6 +14,7 @@ use DocumentacionBundle\Controller\AbstractBaseController;
 use DocumentacionBundle\Form\ImportacionType;
 use DocumentacionBundle\Entity\Importacion;
 use DocumentacionBundle\Entity\Usuario;
+use DocumentacionBundle\Entity\UsuarioDocumento;
 use DocumentacionBundle\Entity\Documento;
 use DocumentacionBundle\Entity\PersonalPasivo;
 use DocumentacionBundle\Entity\PersonalTramite;
@@ -95,8 +96,8 @@ class ImportacionController extends Controller {
         $periodoMes = ($periodoMes_tmp > 0 && $periodoMes_tmp < 10) ? ('0' . $periodoMes_tmp) : $periodoMes_tmp;
 
         if ($esta_procesado == 'No') {
-            if ($tipo_importacion == 'Beneficios') {
-                $this->procesarArchivo($fileName, $periodoAnio, $periodoMes);
+            if ($tipo_importacion == 'Inclusion') {
+                $this->procesarArchivoInclusion($fileName, $periodoAnio, $periodoMes);
                 $importacion->setProcesado('Si');
                 $em->persist($importacion);
                 $em->flush();
@@ -119,7 +120,7 @@ class ImportacionController extends Controller {
         return $this->redirectToRoute('admin_importacion_listar');
     }
 
-    private function procesarArchivo($fileName, $periAnio, $periMes) {
+    private function procesarArchivoInclusion($fileName, $periAnio, $periMes) {
         $archivo = file($this->get('kernel')->getRootDir() . '/../web/uploads/' . $fileName);
         $lineas = count($archivo);
         $em = $this->getDoctrine()->getManager();
@@ -128,22 +129,31 @@ class ImportacionController extends Controller {
         for ($i = 0; $i < $lineas; $i++) {
             $documento = new Documento();
             $usuario = new Usuario();
+            $usuario_documento = new UsuarioDocumento();
             $cuil = explode(';', $archivo[$i])[0];
             $nombre_archivo = explode(';', $archivo[$i])[1];
             $descripcion = explode(';', $archivo[$i])[2];
             $email = explode(';', $archivo[$i])[3];
             $email_arreglado = str_replace(array("\r\n", "\n", "\r"), '', $email);
-            $documento->setCuil($cuil);
-            $documento->setArchivo($nombre_archivo);
-            $documento->setDescripcion($descripcion);
-            $documento->setPeriodoAnio($periAnio);
-            $documento->setPeriodoMes($periMes);
-            if ($descripcion == 'RESOLUCIÓN') {
-               $documento->setActivo('Si');
+
+            //BUSCO EL NOMBRE DE ARCHIVO PARA VER SI EXISTE EL DOCUMENTO
+            $docu = $em->getRepository('DocumentacionBundle:Documento')->findOneBy(array('archivo' => $nombre_archivo));
+            if (NULL == $docu) {
+                  $documento->setCuil($cuil);
+                  $documento->setArchivo($nombre_archivo);
+                  $documento->setDescripcion($descripcion);
+                  $documento->setPeriodoAnio($periAnio);
+                  $documento->setPeriodoMes($periMes);
+                  if ($descripcion == 'RESOLUCIÓN') {
+                     $documento->setActivo('Si');
+                  } else {
+                      $documento->setActivo('Si');
+                  }
+                  $usuario_documento->setDocumento($documento);
             } else {
-                $documento->setActivo('No');
+              $usuario_documento->setDocumento($docu);
             }
-            //BUSCO SI YA EXISTE EL EMAIL
+            //BUSCO EL EMAIL PARA VER SI EXISTE EL USUARIO
             $perso = $em->getRepository('DocumentacionBundle:Usuario')->findOneBy(array('username' => $email_arreglado));
             //SI NO EXISTE PERSISTO EL USUARIO Y LA VINCULO AL DOCUMENTO
             if (NULL == $perso) {
@@ -154,14 +164,16 @@ class ImportacionController extends Controller {
                 $usuario->setRoles('ROLE_USER');
                 $usuario->setFechaExpiracion(new \DateTime('now'));
                 $usuario->setFechaRegistracion(NULL);
-                $em->persist($usuario);
-                $documento->addUsuario($usuario);
+                $usuario_documento->setUsuario($usuario);
             } else { // SI YA EXISTE EL USUARIO LA VINCULO AL DOCUMENTO
-                $documento->addUsuario($perso);
+                //$documento->addUsuario($perso);
+                $usuario_documento->setUsuario($perso);
             };
-            $em->persist($documento);
+
+            $em->persist($usuario_documento);
             $em->flush();
         }; // END FOR
+        die;
     }
 
 
@@ -229,7 +241,6 @@ class ImportacionController extends Controller {
                $stmt = $db->prepare($query);
                $stmt->execute();
                $values = "";$query = "";
-
 
             }
 

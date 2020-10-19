@@ -70,7 +70,28 @@
                                     </tr>
                                   </thead>
                                   <tbody>
-                                  
+                                  {% for documento in usuario.documentos %}
+                                  {% if (documento.activo == 'Si') %}
+                                      <tr>
+                                        <td><font color='black'>{{documento.cuil}}</font></td>
+                                        <td><font color='black'>{{documento.periodoAnio}}/{{documento.periodoMes}}</font></td>
+                                        <td>
+                                          {% if documento.cantidadVisitas > 0 %}
+                                          <i class="material-icons">done_all</i>
+                                          {% else %}
+                                          <!-- <i class="material-icons">done</i> -->
+                                          {% endif %}
+                                        </td>
+                                        <td><font color='black'>{{documento.archivo}}</font></td>
+                                        <td><font color='black'>{{documento.descripcion}}</font></td>
+                                        <td><a href="{{ path('documento_descargar',{'id':documento.id}) }}"><i class="material-icons">picture_as_pdf</i></a></td>
+                                      </tr>
+                                  {% endif %}
+                                {% else %}
+                                <tr>
+                                  <td colspan="5"><font color='black'>No tiene Documento Asociado.</font></td>
+                                </tr>
+                                {% endfor %}
                                 </tbody>
                                 </table>
                               </div>
