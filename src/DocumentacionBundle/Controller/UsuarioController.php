@@ -50,7 +50,7 @@ class UsuarioController extends Controller {
             $filtros = array();
             if ($formFiltro->isSubmitted() && $formFiltro->isValid()) {
                 $filtros = $formFiltro->getData();
-                dump($filtros);die;
+                //dump($filtros);die;
             }
 
             //dump($filtros);die;
