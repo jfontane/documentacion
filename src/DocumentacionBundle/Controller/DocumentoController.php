@@ -39,10 +39,8 @@ class DocumentoController extends Controller {
             $archivos = scandir('./../web/downloads'); // todos los archivos fisicos en la carpeta downloads
             $cantidad = 0;
 
-
-
             foreach ($documentos as $documento) {
-              //dump($documento->getUsuarios());die;
+               //dump($documento->getId());die;
                 $ARR_TMP = array();
                 $ARR_TMP['id'] = $documento->getId();
                 $ARR_TMP['cuil'] = $documento->getCuil();
@@ -51,7 +49,9 @@ class DocumentoController extends Controller {
                 $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
                 $ARR_TMP['descripcion'] = $documento->getDescripcion();
                 $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
-                $ARR_TMP['usuarios'] = $documento->getUsuarios();
+
+                $ARR_TMP['usuarios'] = $this->getUsuariosPorDocumentos($documento->getId());
+                //dump($documento->getUsuarios());die;
                 $cantidad++;
                 if ($this->existeArchivo($documento->getArchivo(), $archivos)) {
                     $ARR_TMP['archivoFisico'] = 'Si';
@@ -60,6 +60,8 @@ class DocumentoController extends Controller {
                 }
                 array_push($ARRAY_DOCUMENTOS, $ARR_TMP);
             }
+            //dump($ARRAY_DOCUMENTOS);die;
+
             $query = $ARRAY_DOCUMENTOS;
             $items_por_pagina = $this->getParameter('knp_paginator_items_por_pagina');
             $paginator = $this->get('knp_paginator');
@@ -79,10 +81,22 @@ class DocumentoController extends Controller {
         }
     }
 
-    public function descargarAction($id) {
-        $visita = new Visita;
+    private function getUsuariosPorDocumentos($idDocumento) {
+      $em = $this->getDoctrine()->getManager();
+      $usuarios = $em->getRepository('DocumentacionBundle:UsuarioDocumento')->findBy(array('documento'=>$idDocumento));
+      $ARRAY_USUARIOS = array();
+      foreach ($usuarios as $usuario) {
+         array_push($ARRAY_USUARIOS, $usuario->getUsuario());
+      }
+
+      //dump($ARRAY_USUARIOS);die;
+      return $usuarios;
+    }
+
+    public function descargarAction($idDocumento, $idUsuario = null) {
         $em = $this->getDoctrine()->getManager();
-        $documento = $em->getRepository('DocumentacionBundle:Documento')->find($id);
+        $documento = $em->getRepository('DocumentacionBundle:Documento')->find($idDocumento);
+        //dump($documento);
         $fileName = utf8_decode($documento->getArchivo());
         $path = $this->get('kernel')->getRootDir() . "/../web/downloads/";
         $content = file_get_contents($path . $fileName);
@@ -95,15 +109,15 @@ class DocumentoController extends Controller {
             $user = $this->getUser();
             if ($user->hasRole('ROLE_USER')) {
                 //$documento->setCantidadVisitas($documento->getCantidadVisitas() + 1);
-                if ($visita->getCantidadVisitas() !== null ) {
-                   $visita->setCantidadVisitas(0);
+                $usuarioDocumento = $em->getRepository('DocumentacionBundle:UsuarioDocumento')->findOneBy(array('usuario'=>$idUsuario,'documento'=>$idDocumento));
+                //dump($usuarioDocumento);die;
+                if ($usuarioDocumento->getCantidadVisitas() === null ) {
+                   $usuarioDocumento->setCantidadVisitas(1);
                 } else {
-                  $visita->setCantidadVisitas($visita->getCantidadVisitas() + 1);
+                  $usuarioDocumento->setCantidadVisitas($usuarioDocumento->getCantidadVisitas() + 1);
                 }
-                $visita->setUsuario($user);
-                $visita->setDocumento($documento);
-                $visita->setFechaUltimaVisita(new \DateTime('now'));
-                $em->persist($visita);
+                $usuarioDocumento->setFechaUltimaVisita(new \DateTime('now'));
+                $em->persist($usuarioDocumento);
                 $em->flush();
 
             }

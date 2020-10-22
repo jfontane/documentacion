@@ -47,12 +47,7 @@ class Documento
    */
   private $cuil;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
-  private $cantidadVisitas = 0;
-
-  /**
+    /**
    * @ORM\Column(type="string", length=255, columnDefinition="enum('Si', 'No')")
    */
   private $activo;
@@ -198,30 +193,6 @@ class Documento
     public function getCuil()
     {
         return $this->cuil;
-    }
-
-    /**
-     * Set cantidadVisitas
-     *
-     * @param integer $cantidadVisitas
-     *
-     * @return Documento
-     */
-    public function setCantidadVisitas($cantidadVisitas)
-    {
-        $this->cantidadVisitas = $cantidadVisitas;
-
-        return $this;
-    }
-
-    /**
-     * Get cantidadVisitas
-     *
-     * @return integer
-     */
-    public function getCantidadVisitas()
-    {
-        return $this->cantidadVisitas;
     }
 
     /**

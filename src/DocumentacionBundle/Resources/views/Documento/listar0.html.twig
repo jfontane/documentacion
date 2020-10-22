@@ -85,7 +85,7 @@
                                       <tr>
                                          <td  colspan="7">
                                            {% for usuario in documento['usuarios'] %}
-                                                  {{usuario.usuario.username}} <a id='btn_borrar'  href="{#{ path('admin_usuario_desvincular', {'id': usuario.id }) }#}"><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                  {{usuario.username}} <a id='btn_borrar'  href="{#{ path('admin_usuario_desvincular', {'id': usuario.id }) }#}"><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {% else %}
                                                No Tiene usuario vinculado.
                                             {% endfor %}

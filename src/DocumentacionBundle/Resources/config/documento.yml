@@ -1,6 +1,6 @@
 documento_descargar:
-    path:     /descargar/{id}
-    defaults: { _controller: DocumentacionBundle:Documento:descargar }
+    path:     /descargar/{idDocumento}/{idUsuario}
+    defaults: { _controller: DocumentacionBundle:Documento:descargar,idUsuario:null }
 
 admin_documentos_listar:
     path:     /listar

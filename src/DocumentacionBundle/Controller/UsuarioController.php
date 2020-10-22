@@ -57,12 +57,14 @@ class UsuarioController extends Controller {
             $usuarioService = $this->get(UsuariosService::class);
             $resultado = $usuarioService->filtrar($filtros);
             $usuarios = $resultado->getResult();
-
+            //dump($usuarios);die;
 
             $paginator = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                     $usuarios, $request->query->getInt('page', 1), 25
             );
+
+            //dump($pagination[0]->getDocumentos()[0]);die;
             return $this->render('@Documentacion\Usuario\listar.html.twig', array(
                         'pagination' => $pagination,
                         'form_filtro' => $formFiltro->createView()
@@ -73,6 +75,9 @@ class UsuarioController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $usuario = $em->getRepository('DocumentacionBundle:Usuario')->findOneById($user->getId());
             $cantidadDocumentos = count($usuario->getDocumentos());
+            //dump($cantidadDocumentos);die;
+            //dump($usuario->getDocumentos()[0]->getDocumento()->getArchivo());die;
+            //dump($usuario->getDocumentos()[0]->getDocumento()->getCantidadVisitas());die;
             return $this->render('@Documentacion\Usuario\ulistar.html.twig', array(
                         'usuario' => $usuario,
                         'cantidad' => $cantidadDocumentos

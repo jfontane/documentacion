@@ -173,7 +173,6 @@ class ImportacionController extends Controller {
             $em->persist($usuario_documento);
             $em->flush();
         }; // END FOR
-        die;
     }
 
 

@@ -5,6 +5,7 @@ namespace DocumentacionBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use DocumentacionBundle\Entity\Documento;
+use DocumentacionBundle\Entity\UsuarioDocumento;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use function ctype_digit;
@@ -34,6 +35,7 @@ class DocumentosService {
      * @var string
      */
     const ALIAS_DOC = 'd';
+    const ALIAS_DOC_USU = 'du';
 
 
     public function __construct(EntityManager $em) {
@@ -59,8 +61,10 @@ class DocumentosService {
         $qbLiq = $this->em->createQueryBuilder();
         $qbLiq->select(array(self::ALIAS_DOC));
         $qbLiq->from(Documento::class, self::ALIAS_DOC);
-        $qbLiq->orderBy(self::ALIAS_DOC . '.cuil', 'ASC');
-        $qbLiq->addOrderBy(self::ALIAS_DOC . '.descripcion', 'DESC');
+        $qbLiq->innerJoin(UsuarioDocumento::class, self::ALIAS_DOC_USU, Join::WITH,
+                          self::ALIAS_DOC . '.id = ' . self::ALIAS_DOC_USU . '.documento');
+        //$qbLiq->orderBy(self::ALIAS_DOC . '.cuil', 'ASC');
+        //$qbLiq->addOrderBy(self::ALIAS_DOC . '.descripcion', 'DESC');
 
         $andX = $qbLiq->expr()->andX(); // expresion AND en vacio
         foreach ($filtros as $filtro => $value) {
