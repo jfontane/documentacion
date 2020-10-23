@@ -6,7 +6,7 @@
     {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('principal_logueado') }}">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Documentos</li>
         </ol>
     </nav>
@@ -75,7 +75,7 @@
                                             <td>{{ documento['descripcion'] }}</td>
                                             <td>
                                                {% if (documento['archivoFisico']=='Si') %}
-                                                <a href="{{path('documento_descargar',{'id' : documento['id'] })}}">
+                                                <a href="{{path('documento_descargar',{'idDocumento' : documento['id'] })}}">
                                                     <i class="material-icons">visibility</i></a>&nbsp;&nbsp;
                                                {% endif %}
                                                 <a href=""><i class="material-icons">delete</i></a>&nbsp;&nbsp;
@@ -85,7 +85,7 @@
                                       <tr>
                                          <td  colspan="7">
                                            {% for usuario in documento['usuarios'] %}
-                                                  {{usuario.usuario.username}} <a id='btn_borrar'  href="{#{ path('admin_usuario_desvincular', {'id': usuario.id }) }#}"><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <a href='{{ path('admin_usuario_ver',{'id':usuario.usuario.id} ) }}'>  {{usuario.usuario.username}} </a>&nbsp;&nbsp;&nbsp;<a id='btn_borrar'  href="{#{ path('admin_usuario_desvincular', {'id': usuario.id }) }#}"><i class="material-icons">delete</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {% else %}
                                                No Tiene usuario vinculado.
                                             {% endfor %}

@@ -155,6 +155,7 @@ class UsuarioController extends Controller {
         }
     }
 
+
     public function desvincularAction($id, UserInterface $usuario) {
         if ($usuario->hasRole('ROLE_ADMIN')) {
                 $em = $this->getDoctrine()->getManager();
@@ -169,7 +170,32 @@ class UsuarioController extends Controller {
                     AbstractBaseController::addWarnMessage('Atencion: El Usuario NO SE ENCUENTRA.');
                     return $this->redirect($this->generateUrl('usuarios_listar'));
                 }
-        }  else {
+        } else {
+          AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+                  . '" no puede realizar esta operacion.');
+          return $this->render('@Documentacion\Default\error.html.twig');
+        }
+    }
+
+    public function desvincular2Action($idUsuario, $idDocumento, UserInterface $usuario) {
+        if ($usuario->hasRole('ROLE_ADMIN')) {
+                $em = $this->getDoctrine()->getManager();
+                $vinculo_usuario_documento_para_eliminar = $em->getRepository('DocumentacionBundle:UsuarioDocumento')->findOneBy(array('usuario'=>$idUsuario,'documento'=>$idDocumento));
+                //dump($vinculo_usuario_documento_para_eliminar);die;
+                if (NULL != $vinculo_usuario_documento_para_eliminar) {
+                    $nombre_usuario_que_se_desvincula = $vinculo_usuario_documento_para_eliminar->getUsuario()->getUsername();
+                    $nombre_documento_que_se_desvincula = $vinculo_usuario_documento_para_eliminar->getDocumento()->getArchivo();
+                    //dump($nombre_usuario_que_se_desvincula,$nombre_documento_que_se_desvincula);die;
+                    //$nombre_usuario_que_se_desvincula
+                    $em->remove($vinculo_usuario_documento_para_eliminar);
+                    $em->flush();
+                    AbstractBaseController::addWarnMessage('Atencion: El Usuario '.$nombre_usuario_que_se_desvincula.' se ha Desvinculado correctamente del archivo '.$nombre_documento_que_se_desvincula.'.');
+                    return $this->redirect($this->generateUrl('admin_usuario_ver',['id' => $idUsuario] ));
+                } else {
+                    AbstractBaseController::addWarnMessage('Atencion: El Usuario/Documento NO SE ENCUENTRA.');
+                    return $this->redirect($this->generateUrl('admin_usuario_ver',['id' => $idUsuario] ));
+                }
+        } else {
           AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
                   . '" no puede realizar esta operacion.');
           return $this->render('@Documentacion\Default\error.html.twig');
@@ -201,6 +227,25 @@ class UsuarioController extends Controller {
           , array('form' => $form->createView(), 'usuario' => $usuario
         ));
     }
+
+
+  public function verAction($id, UserInterface $usuario) {
+    if ($usuario->hasRole('ROLE_ADMIN')) {
+      $em = $this->getDoctrine()->getManager();
+      $usuario = $em->getRepository('DocumentacionBundle:Usuario')->findOneById($id);
+      $documentos = $em->getRepository('DocumentacionBundle:UsuarioDocumento')->findBy(array('usuario'=>$id));
+      $cantidad = count($documentos);
+      return $this->render('@Documentacion/Usuario/ver.html.twig', array(
+                  'usuario' => $usuario,
+                  'cantidad' => $cantidad,
+                  'documentos' => $documentos));
+    } else {
+      AbstractBaseController::addWarnMessage('Atencion: El usuario "' . $usuario->getUsername()
+              . '" no puede realizar esta operacion.');
+      return $this->render('@Documentacion\Default\error.html.twig');
+    };
+  }
+
 
 
 

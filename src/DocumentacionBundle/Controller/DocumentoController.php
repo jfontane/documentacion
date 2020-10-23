@@ -48,7 +48,7 @@ class DocumentoController extends Controller {
                 $ARR_TMP['periodoAnio'] = $documento->getPeriodoAnio();
                 $ARR_TMP['periodoMes'] = $documento->getPeriodoMes();
                 $ARR_TMP['descripcion'] = $documento->getDescripcion();
-                $ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
+                //$ARR_TMP['cantidadVisitas'] = $documento->getCantidadVisitas();
 
                 $ARR_TMP['usuarios'] = $this->getUsuariosPorDocumentos($documento->getId());
                 //dump($documento->getUsuarios());die;

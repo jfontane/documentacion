@@ -1,0 +1,88 @@
+{% set activo = "documentos" %}
+{% extends "@Documentacion/layout.html.twig" %}
+{% block title %}Informacion del Usuario{% endblock %}
+{% block pageid 'admin' %}
+
+{% block body %}
+        {# CONTENIDO ORIGINAL DEL ARCHIVO Y SIN LAS ETIQUETAS <html><body> � </body></html> #}
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('principal_logueado') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('admin_documentos_listar') }}">Documentos</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Detalles del Usuario</li>
+            </ol>
+        </nav>
+
+        <!-- MENSAJES FLASH ADMIN AQUÍ (utilizar <div class=”flash_admin”> </div>) -->
+        <div class="alert alert-danger" role="alert" >
+            {% for mensaje in app.session.flashbag.get('warn') %}
+                <p class="warn">{{ mensaje }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="grid_16">
+             {% if usuario  %}
+                     <div class="mt-4">
+                         Se encontraron {{ cantidad }} Documento(s).
+                     </div><br>
+                          <div class="alert alert-warning" role="alert">
+                          <font color='black'>  <p><b>Usuario:&nbsp;</b>{{ usuario.username }}</p> </font>
+                          <font color='black'>    <p><b>Roles:&nbsp;</b> {{ usuario.roles[0] }}</p> </font>
+                          <font color='black'>  <p><b>Fecha que se Registr&oacute;:</b>&nbsp; </font>
+
+                                {% if usuario.fechaRegistracion == NULL %}
+                                       <font color='red'>NO se ha Registrado.</font>
+                                {% else %}
+                                       <font color='black'>{{ usuario.fechaRegistracion|date("Y-m-d H:i:s") }}</font>
+                                {% endif %}
+
+                              </p>
+                                <table class="table">
+                                  <thead class="thead-dark">
+                                    <tr>
+                                      <th>CUIL</th>
+                                      <th>Periodo</th>
+                                      <th>Leido</th>
+                                      <th>Archivo</th>
+                                      <th>Descripcion</th>
+                                      <th>Acciones</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  {% for docu in documentos %}
+                                    {% if (docu.documento.activo == 'Si') %}
+                                      <tr>
+                                        <td><font color='black'>{{docu.documento.cuil}}</font></td>
+                                        <td><font color='black'>{{docu.documento.periodoAnio}}/{{docu.documento.periodoMes}}</font></td>
+                                        <td>
+                                          {% if docu.cantidadVisitas > 0 %}
+                                          <font color='black'><i class="material-icons">done_all</i></font>
+                                          {% endif %}
+                                        </td>
+                                        <td><font color='black'>{{docu.documento.archivo}}</font></td>
+                                        <td><font color='black'>{{docu.documento.descripcion}}</font></td>
+                                        <td><a href="{{ path('documento_descargar',{ 'idDocumento':docu.documento.id,'idUsuario':usuario.id }) }}" title='Descargar'><i class="material-icons">picture_as_pdf</i></a>
+                                             &nbsp;&nbsp;
+                                            <a href='{{ path('admin_usuario_desvincular_2',{ 'idDocumento':docu.documento.id, 'idUsuario':usuario.id }) }}' title='Desvincular'> <i class="material-icons">link_off</i></a>
+                                        </td>
+                                      </tr>
+                                      {% endif %}
+                                {% else %}
+                                <tr>
+                                  <td colspan="5"><font color='black'>No tiene Documento Asociado.</font></td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                                </table>
+                              </div>
+
+                    {% else %}
+                      <font color='black'>No existe ninguna Usuario.</font>
+                    {% endif %}
+        </div>
+
+    {% endblock %}
+    {% block javascripts %}
+    {{ parent() }}
+    {% endblock %}

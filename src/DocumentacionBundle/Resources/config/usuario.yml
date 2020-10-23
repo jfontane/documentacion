@@ -16,6 +16,12 @@ usuario_editar_email:
     requirements:
         id: \d+
 
+admin_usuario_ver:
+    path:     /ver/{id}
+    defaults: { _controller: DocumentacionBundle:Usuario:ver }
+    requirements:
+        id: \d+
+
 admin_usuario_eliminar:
     path:     /eliminar/{id}
     defaults: { _controller: DocumentacionBundle:Usuario:eliminar }
@@ -27,3 +33,10 @@ admin_usuario_desvincular:
     defaults: { _controller: DocumentacionBundle:Usuario:desvincular }
     requirements:
         id: \d+
+
+admin_usuario_desvincular_2:
+    path:     /desvincular2/{idUsuario}/{idDocumento}
+    defaults: { _controller: DocumentacionBundle:Usuario:desvincular2 }
+    requirements:
+        idUsuario: \d+
+        idDocumento: \d+
